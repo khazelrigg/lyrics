@@ -8,6 +8,7 @@ import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
+from fastapi import HTTPException
 
 #from lyrics_socket.lyrics_sources.mock_responses import MOCK_API, generate_fake_LyricsData, generate_fake_song_list
 #from lyrics_socket.config import SOURCE_CONFIG, GENIUS_CONFIG, REQUEST_CONFIG, USE_MOCK_API
@@ -67,7 +68,8 @@ class GeniusLyricsSource(LyricsSource):
             # Check for invalid response
             if "response" not in response_data or "hits" not in response_data["response"]:
                 self.logger.error("Invalid response from Genius API")
-                return []
+                raise HTTPException(status_code=404, detail="Lyrics not found")
+
 
             hits = response_data["response"]["hits"]
             songs = []
@@ -90,16 +92,20 @@ class GeniusLyricsSource(LyricsSource):
 
         except requests.Timeout:
             self.logger.error("[Genius] API request timed out during search")
-            return []
+            raise HTTPException(status_code=404, detail="Lyrics not found")
+
         except requests.RequestException as e:
             self.logger.error("[Genius] Network error during search: %s", str(e))
-            return []
+            raise HTTPException(status_code=404, detail="Lyrics not found")
+
         except ValueError as e:
             self.logger.error("[Genius] JSON decode error: %s", str(e))
-            return []
+            raise HTTPException(status_code=404, detail="Lyrics not found")
+
         except Exception as e: #pylint: disable=broad-except
             self.logger.error("[Genius] Unexpected error during search: %s", str(e))
-            return []
+            raise HTTPException(status_code=404, detail="Lyrics not found")
+
 
     async def get_lyrics(self, song_id):
 
@@ -109,13 +115,18 @@ class GeniusLyricsSource(LyricsSource):
 
             response_json = self._make_genius_request(song_url)
 
+
+            print("response_json:", response_json)
             self.logger.info("[Genius] Fetched lyrics for song ID: %s\n%s", song_id, response_json)
+
             # Check for invalid response
             if "response" not in response_json or "song" not in response_json["response"]:
                 self.logger.error("[Genius] Invalid song API response structure")
-                return "Error: Invalid API response"
+                raise HTTPException(status_code=404, detail="Lyrics not found")
+
 
             song_info = self._parse_song_info(response_json)
+            print("Song info:", song_info)
 
             lyrics_path = response_json["response"]["song"]["path"]
             lyrics_url = f"https://genius.com{lyrics_path}"
@@ -131,13 +142,42 @@ class GeniusLyricsSource(LyricsSource):
             # Check for the "This song is an instrumental" message
             placeholder_message = soup.find("div", class_="LyricsPlaceholder__Message-uen8er-2")
             if placeholder_message and "instrumental" in placeholder_message.text.lower():
-                return {"synced": False, "lyrics": "This song is an instrumental."}
+                result = LyricsData(
+                    song_id=song_id,
+                    title=song_info["title"],
+                    artist=song_info["artist"],
+                    album=song_info["album"],
+                    url=lyrics_url,
+                    lines=[LyricsLine(text="This song is an instrumental.", start_time=0)],
+                    synced=False,
+                    language=song_info["language"],
+                    source="Genius",
+                    media={"thumbnail": song_info["thumbnail_url"]}
+                )
+                return result
+
+                #return {"synced": False, "lyrics": "This song is an instrumental."}
 
 
             lyrics_divs = soup.find_all("div", {"data-lyrics-container": "true"})
             if not lyrics_divs:
                 self.logger.error("[Genius] No lyrics div for song %s at %s", song_id, lyrics_url)
-                return {"synced": False, "lyrics": "Lyrics not found on Genius page."}
+
+                result = LyricsData(
+                    song_id=song_id,
+                    title=song_info["title"],
+                    artist=song_info["artist"],
+                    album=song_info["album"],
+                    url=lyrics_url,
+                    lines=[LyricsLine(text="Lyrics not found on Genius page.", start_time=0)],
+                    synced=False,
+                    language=song_info["language"],
+                    source="Genius",
+                    media={"thumbnail": song_info["thumbnail_url"]}
+                )
+
+                return result
+                #return {"synced": False, "lyrics": "Lyrics not found on Genius page."}
 
             lyrics = []
             previous_element = None
@@ -185,13 +225,16 @@ class GeniusLyricsSource(LyricsSource):
 
         except requests.Timeout:
             self.logger.error("[Genius] Request timed out while fetching lyrics for song %s", song_id)
-            return None
+            raise HTTPException(status_code=500, detail=" Request timed out while fetching lyrics for song from GeniusLyricsSource")
+            #return None
         except requests.RequestException as e:
             self.logger.error("[Genius] Network error while fetching lyrics: %s", str(e))
-            return None
+            raise HTTPException(status_code=500, detail="Network error while fetching lyrics")
+            #return None
         except Exception as e: # pylint: disable=broad-except
             self.logger.error("[Genius] Unexpected error while fetching lyrics: %s", str(e))
-            return None
+            raise HTTPException(status_code=500, detail="Unexpected error while fetching lyrics")
+            #return None
 
 
     def _process_nested_elements(self, element):
@@ -312,15 +355,23 @@ class GeniusLyricsSource(LyricsSource):
         """
         try:
             song_data = song_json.get("response", {}).get("song", {})
-
+            print("Song data:", song_data)
             # Extract required fields
             title = song_data.get("title", "Unknown Title")
             artist_name = song_data.get("primary_artist_names", "Unknown Artist")
+
             album_data = song_data.get("album", {})
-            album_name = album_data.get("name", "Unknown Album")
+            print("album data:", album_data)
+            if album_data:
+                album_name = album_data.get("name", "Unknown Album")
+            else:
+                album_name = "Unknown Album"
+
             language = song_data.get("language", "Unknown Language")
             cover_art_url = song_data.get("song_art_image_url", None)
             thumbnail_url = song_data.get("song_art_image_thumbnail_url", None)
+
+            print("Title:", title)
 
             return {
                 "title": title,
