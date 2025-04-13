@@ -1,0 +1,11 @@
+pydantic
+spacy
+fastapi
+uvicorn
+requests
+aiohttp
+python-dotenv
+sqlalchemy
+aiosqlite
+zstandard
+brotli
