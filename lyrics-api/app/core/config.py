@@ -24,9 +24,9 @@ REQUEST_CONFIG = {
 
 # Source settings
 SOURCE_CONFIG = {
-    "genius_icon": "images/genius_icon.png",
-    "uta_net_icon": "images/uta_net_icon.png",
-    "spotify_icon": "images/spotify_icon.png",
-    "lyricstranslate_icon": "images/lyricstranslate_icon.png",
-    "elyrics_icon": "images/elyrics_icon.png",
+    "genius_icon": "src/assets/genius_icon.png",
+    "uta_net_icon": "src/assets/uta_net_icon.png",
+    "spotify_icon": "src/assets/spotify_icon.png",
+    "lyricstranslate_icon": "src/assets/lyricstranslate_icon.png",
+    "elyrics_icon": "src/assets/elyrics_icon.png",
 }

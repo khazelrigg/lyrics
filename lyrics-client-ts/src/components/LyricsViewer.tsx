@@ -1,5 +1,9 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { LyricsData } from "../types/lyrics"
+import LyricsFull from "./LyricsFull"
+
+
+import { seek } from "../services/spotifyPlayer"
 
 interface Props {
   lyrics: LyricsData
@@ -7,47 +11,129 @@ interface Props {
 }
 
 export default function LyricsViewer({ lyrics, currentTime }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
   const activeLineRef = useRef<HTMLLIElement>(null)
+  const [isAutoScroll, setIsAutoScroll] = useState(true)
+  const [isAboveViewport, setIsAboveViewport] = useState(false)
+  const [isBelowViewport, setIsBelowViewport] = useState(false)
 
-  //useEffect(() => {
-  //  if (lyrics.synced && activeLineRef.current && containerRef.current) {
-  //    const container = containerRef.current
-  //    const line = activeLineRef.current
-  //    const topOffset = line.offsetTop - container.clientHeight / 2 + line.clientHeight / 2
-  //    container.scrollTo({ top: topOffset, behavior: "smooth" })
-  //  }
-  //}, [currentTime])
+  // Disable autoscroll on user interaction
+  useEffect(() => {
+    const handlePointerDown = () => setIsAutoScroll(false)
+    window.addEventListener("pointerdown", handlePointerDown)
+    window.addEventListener("wheel", handlePointerDown)
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown)
+      window.removeEventListener("wheel", handlePointerDown)
+    }
+  }, [])
+
+  // Scroll to active lyric line when synced and autoscroll is enabled
+  useEffect(() => {
+    if (!lyrics.synced || !isAutoScroll) return
+    if (!activeLineRef.current) return
+
+    const line = activeLineRef.current
+    const targetY = line.offsetTop - window.innerHeight / 3
+    const currentY = window.scrollY
+    const distance = Math.abs(currentY - targetY)
+
+    if (distance > 40) {
+      window.scrollTo({ top: targetY, behavior: "smooth" })
+    }
+  }, [currentTime, isAutoScroll, lyrics.synced])
+
+  // Detect if active line is above or below viewport
+  useEffect(() => {
+    const line = activeLineRef.current
+    if (!line) return
+
+    const aboveObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsAboveViewport(!entry.isIntersecting && entry.boundingClientRect.top < 0)
+      },
+      { threshold: 0 }
+    )
+
+    const belowObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsBelowViewport(!entry.isIntersecting && entry.boundingClientRect.bottom > window.innerHeight)
+      },
+      { threshold: 0 }
+    )
+
+    aboveObserver.observe(line)
+    belowObserver.observe(line)
+
+    return () => {
+      aboveObserver.disconnect()
+      belowObserver.disconnect()
+    }
+  }, [activeLineRef.current, currentTime])
+
+  // Find active line (skip if not synced)
+  let activeLineIndex = -1
+  if (lyrics.synced) {
+    lyrics.lines.forEach((line, i) => {
+      const isLast = i === lyrics.lines.length - 1
+      const startsBeforeNow = currentTime >= line.start_time
+      const endsAfterNow = isLast || currentTime < lyrics.lines[i + 1]?.start_time
+      if (startsBeforeNow && endsAfterNow) {
+        activeLineIndex = i
+      }
+    })
+  }
+
+  const activeLine = lyrics.lines[activeLineIndex]
 
   return (
-    <div
-      ref={containerRef}
-      className="mt-8 bg-gray-800 rounded p-4 max-h-[70vh] overflow-y-auto"
-    >
-      <h3 className="text-xl font-semibold mb-4">
-        {lyrics.title} – {lyrics.artist}
-      </h3>
-
-      <ul className="space-y-1">
-        {lyrics.lines.map((line, i) => {
-          const isLast = i === lyrics.lines.length - 1
-          const startsBeforeNow = currentTime >= line.start_time
-          const endsAfterNow = isLast || currentTime < lyrics.lines[i + 1].start_time
-          const isActive = lyrics.synced && startsBeforeNow && endsAfterNow
-
-          return (
-            <li
-              key={i}
-              ref={isActive ? activeLineRef : null}
-              className={`transition-all duration-300 ease-in-out ${
-                isActive ? "text-red-500 text-2xl font-bold" : "text-gray-200 text-2xl"
-              }`}
+    <>
+      {/* Sticky bar for active lyric (top or bottom based on scroll) */}
+      {!isAutoScroll && activeLine?.text && (
+        <>
+          {isAboveViewport && (
+            <button
+              onClick={() => setIsAutoScroll(true)}
+              className="sticky top-16 z-40 w-full bg-white/90 backdrop-blur px-4 py-2 shadow"
             >
-              {line.text}
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+              <p className="text-center text-lg font-semibold text-blue-600">
+                {activeLine.text}
+              </p>
+            </button>
+          )}
+
+          {isBelowViewport && (
+            <button
+              onClick={() => setIsAutoScroll(true)}
+              className="fixed bottom-16 left-0 w-full z-40 bg-white/90 backdrop-blur px-4 py-2 shadow border-t"
+            >
+              <p className="text-center text-lg font-semibold text-blue-600">
+                {activeLine.text}
+              </p>
+            </button>
+          )}
+    </>
+  )}
+
+      {/* Lyrics content */}
+      <div className="mt-8 bg-white rounded p-4 relative">
+        <h3 className="text-xl font-semibold mb-4">
+          {lyrics.title || "Unknown Title"} – {lyrics.artist || "Unknown Artist"}
+        </h3>
+
+        <LyricsFull
+          lines={lyrics.lines}
+          currentTime={currentTime}
+          synced={lyrics.synced}
+          onActiveRef={el => {
+            if (el) activeLineRef.current = el
+          }}
+          onLineClick={(ms) => {
+            console.log("Seeking to ", ms)
+            seek(ms)
+          }}
+        />
+
+      </div>
+    </>
   )
 }

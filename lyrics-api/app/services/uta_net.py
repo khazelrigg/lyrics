@@ -138,7 +138,8 @@ class UtaNetLyricsSource(LyricsSource):
 
             # Extract album link
             album_link_tag = soup.find("a", string="アルバム一覧")
-            album_link = album_link_tag["href"] if album_link_tag else None
+            album_link = album_link_tag.get("href") if album_link_tag else None
+
             if album_link:
                 album_link = f"{self.BASE_URL}{album_link}"  # Ensure full URL
                 self.logger.info("Album link found: %s", album_link)

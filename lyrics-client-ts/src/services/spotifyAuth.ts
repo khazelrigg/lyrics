@@ -35,7 +35,7 @@ const generateCodeVerifier = (length: number) => {
       redirect_uri: redirectUri,
       code_challenge_method: "S256",
       code_challenge: codeChallenge,
-      scope: "user-read-currently-playing user-read-playback-state",
+      scope: " user-read-playback-state user-modify-playback-state user-read-currently-playing",
     })
 
     window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`

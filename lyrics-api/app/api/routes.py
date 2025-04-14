@@ -7,9 +7,13 @@ router = APIRouter()
 manager = LyricsManager()
 
 @router.get("/lyrics", response_model=LyricsData)
-async def get_lyrics(track_id: str, source: str):
-    print("Get lyrics")
-    return await manager.get_lyrics(track_id, source)
+async def get_lyrics(
+    song_id: str,
+    source: str,
+    force_refresh: bool = Query(default=False)
+):
+    return await manager.get_lyrics(song_id=song_id, source_name=source, force_refresh=force_refresh)
+
 
 @router.get("/search")
 async def search_songs(track: str, artist: str):

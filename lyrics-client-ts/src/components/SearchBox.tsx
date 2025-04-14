@@ -38,7 +38,7 @@ export default function SearchBox() {
   }
 
   return (
-    <div className="p-4 bg-white text-black rounded shadow max-w-xl mx-auto mt-8">
+    <div className="p-4 bg-white text-black rounded-xl m-8 shadow max-w-xl mx-auto mt-8">
       <h2 className="text-xl font-semibold mb-4">Search Lyrics</h2>
 
       <div className="flex flex-col gap-2">

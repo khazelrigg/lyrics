@@ -35,6 +35,7 @@ class SpotifyLyricsSource(LyricsSource):
         Sends an async GET request to the local API with the given Spotify URL
         and returns the JSON response.
         """
+        #endpoint = "localhost:9000/?trackid=" + song_id
         endpoint = "https://spotify-lyrics-api-woad.vercel.app/?trackid=" + song_id
         #params = {"trackid": song_id}
 
@@ -97,7 +98,23 @@ class SpotifyLyricsSource(LyricsSource):
 
             if response is None or "lines" not in response:
                 self.logger.warning("No lyrics found for song: %s. Returning None.", song_id)
-                return None
+                #return None
+                result = LyricsData(
+                    song_id=song_id,
+                    title="",#current_song["name"],
+                    artist="",#current_song["artists"][0]["name"],
+                    album=album_name,
+                    lines=[LyricsLine(text="No lyrics found from Spotify", start_time=0)],
+                    synced=False,
+                    language="en",
+                    media={
+                        "thumbnail": thumbnail_url
+                    },
+                    source="Spotify",
+                    url="",#current_song["external_urls"]["spotify"]
+                )
+                print(result)
+                return result
 
             is_synced = response["syncType"] == "LINE_SYNCED"
             print("Is synced:", is_synced)

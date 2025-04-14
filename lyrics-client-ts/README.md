@@ -1,3 +1,55 @@
+# Lyrics Client
+
+## Sections
+1. Now playing
+
+    - Track info, artwork, progress
+    - Play/Pause, Previous, Next (maybe hidden until needed)
+    - Tap/click to focus synced lyrics (if enabled)
+
+1. Songs/Lyrics List
+
+    - List of songs from alternate sources
+    - Show if synced or unsynced
+    - Show the source
+
+1. Lyrics
+
+    * Synced lyrics (if enabled)
+    * Auto highlight current line
+    * Toggle to turn on/off highlight?
+    * Tap/click to focus now playing (if enabled)
+    * Stats area?
+      - Total lines, words, characters
+
+
+1. Text Settings
+    - Center vs left/right align
+    - Menu for text/font in lyrics viewer
+
+1. Search and Source toggle
+
+    - Search bars for songs
+    - Source toggle for search results
+
+
+1. Lyrics editor
+
+# Views
+1. Main View
+2. Karaoke Mode
+3. Now Playing
+4. Search page
+
+Clicking on a lyric line opens a menu with some options - seek to line, copy text, copy to card, etc
+
+Could be a full spotify player? Like navigate to album to select other songs?
+
+
+
+- Search bar to search inside lyrics (for the viewer?)
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -6,6 +58,10 @@ Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
+
+`npm run dev`
 
 ## Expanding the ESLint configuration
 

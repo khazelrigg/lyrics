@@ -116,7 +116,7 @@ class LyricsManager:
         self.logger.info("Found %d songs for %s by %s", song_count, track, artist)
         return results
 
-    async def get_lyrics(self, song_id: str, source_name: str) -> LyricsData:
+    async def get_lyrics(self, song_id: str, source_name: str, force_refresh: bool = False) -> LyricsData:
         """
         Fetch lyrics for a specific song from the specified source.
 
@@ -131,13 +131,14 @@ class LyricsManager:
         self.logger.debug("Getting lyrics for %s from %s", song_id, source_name)
         self.logger.debug("Enabled sources: %s", self.enabled_sources)
 
-        # Check the cache first
-        cache_key = f"{source_name}_{song_id}"
-        cached = await LyricsCache.get_cached_lyrics(source_name, song_id)
-        if cached:
-            self.logger.debug("Cache has lyrics: %s from %s", song_id, source_name)
-            print("Lyrics from cache")
-            return LyricsData(**cached)
+        if not force_refresh:
+            # Check the cache first
+            cache_key = f"{source_name}_{song_id}"
+            cached = await LyricsCache.get_cached_lyrics(source_name, song_id)
+            if cached:
+                self.logger.debug("Cache has lyrics: %s from %s", song_id, source_name)
+                print("Lyrics from cache")
+                return LyricsData(**cached)
 
         # Fetch lyrics from the source
         lyrics = await self.sources[source_name].get_lyrics(song_id)
@@ -145,10 +146,13 @@ class LyricsManager:
         # Cache our results
         if lyrics:
             await LyricsCache.set_cached_lyrics(source_name, song_id, lyrics.dict())
-        self.logger.debug("Cached lyrics: %s from %s", song_id, source_name)
+            self.logger.debug("Cached lyrics: %s from %s", song_id, source_name)
         #self.logger.debug("Song lyrics: %s", lyrics)
 
         return lyrics
+
+
+
 
     def toggle_source(self, source_name: str) -> bool:
         """

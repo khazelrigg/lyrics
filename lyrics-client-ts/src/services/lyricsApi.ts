@@ -10,9 +10,9 @@ export async function searchLyrics(track: string, artist: string) {
   return response.data
 }
 
-export async function fetchLyrics(track_id: string, source: string) {
+export async function fetchLyrics(track_id: string, source: string, force_refresh: boolean = false) {
   const response = await axios.get(`${BASE_URL}/lyrics`, {
-    params: { track_id, source },
+    params: { song_id: track_id, source, force_refresh },
   })
   return response.data as LyricsData
 }
