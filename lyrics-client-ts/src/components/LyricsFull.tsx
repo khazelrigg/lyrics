@@ -1,4 +1,6 @@
 import type { LyricsLine } from "../types/lyrics"
+import { useLyricsSettings } from "../context/LyricsSettingsContext"
+
 
 interface Props {
   lines: LyricsLine[]
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export default function LyricsFull({ lines, currentTime, synced, onActiveRef, onLineClick }: Props) {
+  const { settings } = useLyricsSettings()
   return (
     <ul className="space-y-1 text-gray-800">
       {lines.map((line, i) => {
@@ -20,6 +23,11 @@ export default function LyricsFull({ lines, currentTime, synced, onActiveRef, on
 
         return (
           <li
+            style={{
+              fontSize: `${settings.fontSize}px`,
+              fontFamily: settings.fontFamily,
+              lineHeight: settings.lineHeight,
+            }}
             key={i}
             ref={isActive ? onActiveRef : null}
             onClick={() => {

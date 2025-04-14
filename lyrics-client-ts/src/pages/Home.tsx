@@ -6,8 +6,11 @@ import SongListPanel from "../components/SongListPanel"
 import NowPlayingDrawer from "../components/NowPlayingDrawer"
 import { useSpotifyAuth } from "../hooks/useSpotifyAuth"
 import { play, pause, nextTrack, previousTrack } from "../services/spotifyPlayer"
+
+
 import { fetchLyrics } from "../services/lyricsApi"
 import type { LyricsData } from "../types/lyrics"
+import LyricsSettingsPanel from "../components/LyricsSettingsPanel"
 
 export default function Home() {
   const token = useSpotifyAuth()
@@ -19,6 +22,8 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const [albumArt, setAlbumArt] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [showSettings, setShowSettings] = useState(false)
+
 
   const handlePlayPause = () => {
     isPlaying ? pause() : play()
@@ -130,6 +135,22 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white text-gray-800">
       <AppHeader />
 
+
+      <div className="relative bg-neutral-100 dark:bg-neutral-900 text-black dark:text-white">
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="fixed top-4 right-32 z-50 bg-white dark:bg-black text-sm px-4 py-2 rounded shadow hover:bg-gray-200 dark:hover:bg-neutral-800"
+        >
+          {showSettings ? "Close Settings" : "Lyrics Settings"}
+        </button>
+
+        {showSettings && (
+          <div className="fixed top-16 right-4 z-50 w-80 max-w-full bg-white dark:bg-neutral-900 p-4 shadow-lg rounded-lg border border-neutral-300 dark:border-neutral-700">
+            <LyricsSettingsPanel />
+          </div>
+        )}
+        </div>
+
       {/* Main content */}
       <main className="flex-1 px-4 py-6 space-y-6 max-w-7xl w-full mx-auto">
         {lyrics && <LyricsViewer lyrics={lyrics} currentTime={progressMs} />}
@@ -147,8 +168,9 @@ export default function Home() {
       </main>
 
       {/* Sticky footer */}
-      <footer className="sticky bottom-0 w-full border-t z-10 bg-gray-100">
+      <footer className="sticky bottom-0 w-full border-t z-10">
         <div className="max-w-7xl mx-auto px-4 py-2">
+
 
           <NowPlayingDrawer
             song_id={lastSongId || ""}

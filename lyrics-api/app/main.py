@@ -18,5 +18,5 @@ app.include_router(routes.router)
 
 @app.on_event("startup")
 async def startup():
-
+    print("Starting Lyrics Search API")
     await LyricsCache.init_db()
