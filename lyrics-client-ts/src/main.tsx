@@ -6,8 +6,9 @@ import LyricsFull from './components/LyricsFull.tsx'
 import { LyricsSettingsProvider } from './context/LyricsSettingsContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
+  <StrictMode>
   <LyricsSettingsProvider>
     <App />
   </LyricsSettingsProvider>,
-
+  </StrictMode>,
 )

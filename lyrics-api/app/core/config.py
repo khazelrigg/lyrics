@@ -11,6 +11,7 @@ GENIUS_CONFIG = {
 }
 
 SPOTIFY_CONFIG = {
+    "lyrics_api_url": os.getenv("SPOTIFY_LYRICS_API_URL"),
     "client_id": os.getenv("SPOTIFY_CLIENT_ID"),
     "client_secret": os.getenv("SPOTIFY_CLIENT_SECRET"),
 }

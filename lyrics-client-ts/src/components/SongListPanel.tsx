@@ -14,7 +14,7 @@ interface Props {
 
 export default function SongListPanel({ songs, onSongClick }: Props) {
   return (
-    <div className="p-0 border bg-white overflow-y-auto max-h-64 rounded-xl border-yellow-500">
+    <div className="p-0 border bg-white overflow-y-auto max-h-128 rounded-xl border-yellow-500">
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-white border-b p-4">
         <h2 className="text-lg font-semibold text-gray-800">Search Results</h2>

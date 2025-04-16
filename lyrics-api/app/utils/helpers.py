@@ -1,5 +1,6 @@
 import re
 #import spacy
+from app.models.lyrics import LyricsLine
 
 # Load spaCy model
 #nlp = spacy.load("en_core_web_sm")
@@ -125,7 +126,64 @@ def contains_japanese(text):
 #        "original": original_title,
 #        "variations": final_variations,
 #    }
+def add_pause_lines(lyrics_lines, pause_duration_ms=10000):
+    """
+    Look at a list of lyrics lines and add new "pause" lines between lines that have a
+    significant time difference.
 
+    lyrics_lines: list of lyrics lines
+    pause_duration_ms: minimum duration of the pause in milliseconds
+    """
+    pause_line = LyricsLine(text="♪", start_time=0)
+    result_lines = []
+    
+    print("[Lyrics Cleanup] Adding pause lines...")
+
+    if len(lyrics_lines) < 1:
+        print("No lyrics lines provided.")
+        return result_lines
+
+    if len(lyrics_lines) == 1:
+        print("Only one line, return as is...")
+        return lyrics_lines
+
+    print("number of lines", len(lyrics_lines))
+    print("First line", lyrics_lines[0], "starts at", lyrics_lines[0].start_time)
+    
+    
+    # Add a pause at the very start if needed
+    if lyrics_lines[0].start_time > pause_duration_ms:
+        print("Adding pause at the start...")
+        result_lines.append(LyricsLine(text="♪", start_time=0))
+
+    # Add the rest of the lines including pauses
+    for i in range(len(lyrics_lines) - 1):
+        result_lines.append(lyrics_lines[i])
+        
+        curr_line_is_blank = lyrics_lines[i].text == "♪"
+        
+        if curr_line_is_blank:
+            print("Current line is already blank, skipping...")
+            continue
+        
+        next_line_is_blank = lyrics_lines[i + 1].text == "♪"
+
+        curr_line_ms = lyrics_lines[i].start_time
+        next_line_ms = lyrics_lines[i + 1].start_time
+        time_diff = next_line_ms - curr_line_ms
+        
+        print("Current line:", lyrics_lines[i], "starts at", lyrics_lines[i].start_time)
+        print("Next line:", lyrics_lines[i + 1], "starts at", lyrics_lines[i + 1].start_time)
+        print("Time diff:", time_diff)
+        if next_line_is_blank:
+            print("Next line is blank, skipping pause...")
+            #continue
+        
+        if not next_line_is_blank and time_diff > pause_duration_ms:
+            print("Adding pause...")
+            result_lines.append(LyricsLine(text="♪", start_time=lyrics_lines[i].start_time + time_diff // 2))
+    
+    return result_lines
 
 def remove_suffix(text, suffix):
     if text.endswith(suffix):

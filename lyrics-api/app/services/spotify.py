@@ -15,6 +15,7 @@ import aiohttp
 from app.core.config import SPOTIFY_CONFIG
 from app.models.lyrics import LyricsData, LyricsLine
 from app.core.lyrics_source import LyricsSource
+from app.utils.helpers import add_pause_lines
 
 class SpotifyLyricsSource(LyricsSource):
     """
@@ -36,10 +37,11 @@ class SpotifyLyricsSource(LyricsSource):
         and returns the JSON response.
         """
         #endpoint = "localhost:9000/?trackid=" + song_id
-        endpoint = "https://spotify-lyrics-api-woad.vercel.app/?trackid=" + song_id
+        endpoint = SPOTIFY_CONFIG["lyrics_api_url"] + "?trackid=" + song_id
         #params = {"trackid": song_id}
 
         print("Getting lyrics from Spotify lyrics API")
+        print("Sending request to " + endpoint)
 
         async with aiohttp.ClientSession() as session:
             try:
@@ -104,7 +106,7 @@ class SpotifyLyricsSource(LyricsSource):
                     title="",#current_song["name"],
                     artist="",#current_song["artists"][0]["name"],
                     album=album_name,
-                    lines=[LyricsLine(text="No lyrics found from Spotify", start_time=0)],
+                    lines=[LyricsLine(text="No lyrics found from Spotify.", start_time=0)],
                     synced=False,
                     language="en",
                     media={
@@ -123,20 +125,21 @@ class SpotifyLyricsSource(LyricsSource):
 
             lines = response["lines"]
             lyrics_lines = []
-            processed_lyrics = []
+            #processed_lyrics = []
 
             for line in lines:
                 lyrics_lines.append(LyricsLine(
                     text=line["words"],
                     start_time=line["startTimeMs"]
                 ))
-                print(line)
-                processed_lyrics.append({
-                    "text": line["words"],
-                    "startTimeMs": int(line["startTimeMs"]) if line["startTimeMs"] else None
-                })
+                #print(line)
+                #processed_lyrics.append({
+                #    "text": line["words"],
+                #    "startTimeMs": int(line["startTimeMs"]) if line["startTimeMs"] else None
+                #})
 
             print("Read lines from the response: ", lyrics_lines)
+            #paused = add_pause_lines(lyrics_lines)
 
             return LyricsData(
                 song_id=song_id,
