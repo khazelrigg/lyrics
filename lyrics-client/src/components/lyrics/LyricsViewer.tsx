@@ -66,17 +66,20 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
     }
   }, [userScrolled])
 
+
+  // Changing the flex-col will make lyrics vertical with horizontal scroll - maybe for JP vertical text
+
   return (
-    <div className="relative flex flex-col max-h-screen font-lyrics">
+    <div className="flex flex-col items-center w-full space-y-2 max-h-screen font-lyrics">
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto rounded p-4 bg-white/5 backdrop-blur scroll-smooth max-h-full"
+        className="flex-1 overflow-y-auto rounded-xl p-4 bg-white/5 backdrop-blur scroll-smooth max-h-full"
       >
         <p className="text-2xl font-bold">
           Lyrics to {lyrics.title} by {lyrics.artist} from {lyrics.source}
         </p>
         <p className="text-sm text-gray-400">Estimated playback: {currentTime}ms</p>
-        <ul className="space-y-2">
+        <ul className="flex flex-col items-center w-full space-y-2"> 
           {lyrics.lines.map((line, index) => {
             const isActive = index === activeIndex
             const isPast = index < activeIndex

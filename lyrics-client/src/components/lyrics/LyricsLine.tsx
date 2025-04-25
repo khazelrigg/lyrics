@@ -28,10 +28,10 @@ const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
       <li
         ref={ref}
         onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className={`group relative w-full transition-all duration-100 px-2 py-1 select-none cursor-pointer
-        ${isActive ? "font-bold text-lg text-green-500 scale-105 " : ""}
+        //onMouseEnter={() => setIsHovered(true)}
+        //onMouseLeave={() => setIsHovered(false)}
+        className={`px-2 py-1 text-left w-full group relative transition-all duration-100 select-none cursor-pointer
+        ${isActive ? "font-bold text-lg text-green-500" : ""}
         ${!isPast && !isActive ? "text-gray-600" : ""}
         `}
       >
