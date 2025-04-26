@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd lyrics-client-ts
+cd lyrics-client
 npm run dev
