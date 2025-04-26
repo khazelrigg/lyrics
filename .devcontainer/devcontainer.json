@@ -15,7 +15,20 @@
 	"forwardPorts": [5173, 9000], 
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd lyrics-api && if [ ! -d .venv ]; then python3 -m venv .venv; fi && . .venv/bin/activate && pip install -r requirements.txt && cd ../lyrics-client && npm install"
+	"postCreateCommand": "cd lyrics-api && if [ ! -d .venv ]; then python3 -m venv .venv; fi && . .venv/bin/activate && pip install -r requirements.txt && cd ../lyrics-client && npm install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"sourcegraph.cody-ai",
+				"dbaeumer.vscode-eslint",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.debugpy",
+				"ms-python.autopep8"
+			]
+		}
+	}
 	
 	// Configure tool-specific properties.
 	// "customizations": {},

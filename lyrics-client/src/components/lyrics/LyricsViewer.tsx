@@ -1,27 +1,54 @@
-
-// src/components/Lyrics/LyricsViewer.tsx
 import { useEffect, useRef, useState } from "react"
-import type { LyricsData } from "../../types/lyrics"
-import LyricsLine from "./LyricsLine"
+import type { LyricsData, LyricsLineData } from "../../types/lyrics"
 import { useEstimatedProgress } from "../../hooks/useEstimatedProgress"
+import LyricsLine from "./LyricsLine"
+
+import { useTokenizer } from "../../hooks/useTokenizer"
+import { parseLyricsLine } from "../../utils/parseLyricsLine"
 
 interface LyricsViewerProps {
   lyrics: LyricsData
 }
 
 export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
+
+  const tokenizer = useTokenizer();
+
   const containerRef = useRef<HTMLDivElement>(null)
   const activeLineRef = useRef<HTMLLIElement>(null)
   const [isAutoScroll, setIsAutoScroll] = useState(true)
   const [userScrolled, setUserScrolled] = useState(false)
 
   const currentTime = useEstimatedProgress(100)
+  const [parsedLyrics, setParsedLyrics] = useState<LyricsData>(lyrics)
 
-  const activeIndex = lyrics.lines.findIndex((line, i) => {
+  const activeIndex = parsedLyrics.lines.findIndex((line, i) => {
     const current = line.start_time || 0
-    const next = lyrics.lines[i + 1]?.start_time ?? Infinity
+    const next = parsedLyrics.lines[i + 1]?.start_time ?? Infinity
     return currentTime >= current && currentTime < next
   })
+
+  // 🛠 New: Parse missing parsedWords when lyrics first load
+  useEffect(() => {
+    if (!tokenizer) return; // Quit if tokenizer not ready
+
+    async function parseAllLines() {
+      const parsedLines = await Promise.all(
+        lyrics.lines.map(async (line) => {
+          if (!line.parsedWords && containsJapanese(line.text)) {
+            console.log(line.text + " has japanese")
+            const parsedWords = await parseLyricsLine(line.text, tokenizer)
+            return { ...line, parsedWords }
+          } else {
+            return line
+          }
+        })
+      )
+      setParsedLyrics({ ...lyrics, lines: parsedLines })
+    }
+
+    parseAllLines()
+  }, [lyrics, tokenizer])
 
   useEffect(() => {
     if (!isAutoScroll) return
@@ -66,8 +93,10 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
     }
   }, [userScrolled])
 
+  if (!tokenizer) {
+    return <div className="p-4 text-center text-gray-400">Loading tokenizer...</div>;
+  }
 
-  // Changing the flex-col will make lyrics vertical with horizontal scroll - maybe for JP vertical text
 
   return (
     <div className="flex flex-col items-center w-full space-y-2 max-h-screen font-lyrics">
@@ -76,11 +105,11 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
         className="flex-1 overflow-y-auto rounded-xl p-4 bg-white/5 backdrop-blur scroll-smooth max-h-full"
       >
         <p className="text-2xl font-bold">
-          Lyrics to {lyrics.title} by {lyrics.artist} from {lyrics.source}
+          Lyrics to {parsedLyrics.title} by {parsedLyrics.artist} from {parsedLyrics.source}
         </p>
         <p className="text-sm text-gray-400">Estimated playback: {currentTime}ms</p>
-        <ul className="flex flex-col items-center w-full space-y-2"> 
-          {lyrics.lines.map((line, index) => {
+        <ul className="flex flex-col items-center w-full space-y-2">
+          {parsedLyrics.lines.map((line, index) => {
             const isActive = index === activeIndex
             const isPast = index < activeIndex
 
@@ -88,10 +117,12 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
               <LyricsLine
                 key={index}
                 text={line.text}
-                startTime={line.start_time}
+                parsedWords={line.parsedWords}
+                start_time={line.start_time}
                 isActive={isActive}
                 isPast={isPast}
                 onClick={() => {}}
+                furiganaMode="hover"
                 {...(isActive ? { ref: activeLineRef } : {})}
               />
             )
@@ -111,4 +142,9 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
       )}
     </div>
   )
+}
+
+// Little helper: check if text contains any Japanese
+function containsJapanese(text: string): boolean {
+  return /[\u3000-\u30ff\u3400-\u4dbf\u4e00-\u9faf\uff66-\uff9f]/.test(text);
 }

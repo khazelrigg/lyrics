@@ -1,10 +1,11 @@
 // src/components/Lyrics/LyricsLine.tsx
 import { forwardRef, useState } from "react";
+import { LyricsLineData } from "../../types/lyrics";
 import { seek } from "../../services/spotifyApi";
 
-interface LyricsLineProps {
-  text: string;
-  startTime?: number;
+import LyricsWord from "./LyricsWord"
+
+interface LyricsLineProps extends LyricsLineData {
   isActive: boolean;
   isPast: boolean;
   onClick?: () => void;
@@ -15,7 +16,7 @@ interface LyricsLineProps {
  * Handles styles depending on whether the line is active or past.
  */
 const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
-  function LyricsLine({ text, startTime, isActive, isPast, onClick }, ref) {
+  function LyricsLine({ text, parsedWords, start_time: startTime, isActive, isPast, onClick, furiganaMode = "always" }, ref) {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleSeek = async () => {
@@ -28,8 +29,6 @@ const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
       <li
         ref={ref}
         onClick={onClick}
-        //onMouseEnter={() => setIsHovered(true)}
-        //onMouseLeave={() => setIsHovered(false)}
         className={`px-2 py-1 text-left w-full group relative transition-all duration-100 select-none cursor-pointer
         ${isActive ? "font-bold text-lg text-green-500" : ""}
         ${!isPast && !isActive ? "text-gray-600" : ""}
@@ -41,6 +40,18 @@ const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
         {text === "♪" ? (
           <span className={`${isActive ? "animate-pulse text-3xl" : ""}`}>
             {text}
+          </span>
+        ) : parsedWords && parsedWords.length > 0 ? (
+          //console.log(parsedWords)
+          <span>
+            {parsedWords.map((word, idx) => (
+              <LyricsWord
+                key={idx}
+                surface={word.surface}
+                reading={word.reading}
+                furiganaMode={furiganaMode}
+              />
+            ))}
           </span>
         ) : (
           <span>{text || "♪"}</span>
