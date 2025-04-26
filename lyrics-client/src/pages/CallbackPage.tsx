@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react"
-import { extractTokenFromUrl } from "../services/spotifyAuth"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { extractTokenFromUrl } from "../services/spotifyAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function CallbackPage() {
-  const navigate = useNavigate()
-  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      const token = extractTokenFromUrl()
+      const token = extractTokenFromUrl();
       if (token) {
         // ✅ Redirect after token is saved
-        navigate("/")
+        navigate("/");
       } else {
-        setError("No access token found in URL.")
+        setError("No access token found in URL.");
       }
     } catch (err) {
-      setError("Failed to extract token.")
+      setError("Failed to extract token.");
     }
-  }, [])
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-white">
@@ -31,5 +31,5 @@ export default function CallbackPage() {
         </>
       )}
     </div>
-  )
+  );
 }

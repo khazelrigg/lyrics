@@ -1,18 +1,18 @@
 // src/pages/SearchPage.tsx
-import { useState } from "react"
+import { useState } from "react";
 //import LyricsViewer from "../components/Lyrics/LyricsViewer"
 
 export default function SearchPage() {
-  const [query, setQuery] = useState("")
-  const [results, setResults] = useState<any[]>([])
-  const [selectedLyrics, setSelectedLyrics] = useState<any>(null)
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [selectedLyrics, setSelectedLyrics] = useState<any>(null);
 
   const handleSearch = async () => {
-    if (!query.trim()) return
-    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`)
-    const data = await res.json()
-    setResults(data.results || [])
-  }
+    if (!query.trim()) return;
+    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    setResults(data.results || []);
+  };
 
   return (
     <div className="p-6">
@@ -57,5 +57,5 @@ export default function SearchPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
