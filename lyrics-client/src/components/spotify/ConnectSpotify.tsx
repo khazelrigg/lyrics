@@ -1,46 +1,50 @@
 // src/components/Spotify/ConnectSpotify.tsx
-import { initiateSpotifyAuth, getAccessToken, clearAccessToken } from "../../services/spotifyAuth"
-import { useEffect, useRef, useState } from "react"
-import { getUserProfile } from "../../services/spotifyApi"
+import {
+  initiateSpotifyAuth,
+  getAccessToken,
+  clearAccessToken,
+} from "../../services/spotifyAuth";
+import { useEffect, useRef, useState } from "react";
+import { getUserProfile } from "../../services/spotifyApi";
 
 /**
  * A small header component that either shows the login button or the user avatar if logged in.
  */
 export default function ConnectSpotify() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [profileImg, setProfileImg] = useState<string | null>(null)
-  const [displayName, setDisplayName] = useState<string | null>(null)
-  const [showMenu, setShowMenu] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const token = getAccessToken()
-    if (!token) return
+    const token = getAccessToken();
+    if (!token) return;
 
-    setIsLoggedIn(true)
+    setIsLoggedIn(true);
 
     getUserProfile()
       .then((data) => {
-        setProfileImg(data.images?.[0]?.url || null)
-        setDisplayName(data.display_name || null)
+        setProfileImg(data.images?.[0]?.url || null);
+        setDisplayName(data.display_name || null);
       })
-      .catch(() => setIsLoggedIn(false))
-  }, [])
+      .catch(() => setIsLoggedIn(false));
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false)
+        setShowMenu(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
-    clearAccessToken()
-    window.location.reload()
-  }
+    clearAccessToken();
+    window.location.reload();
+  };
 
   if (!isLoggedIn) {
     return (
@@ -50,12 +54,15 @@ export default function ConnectSpotify() {
       >
         Connect Spotify
       </button>
-    )
+    );
   }
 
   return (
     <div className="relative" ref={menuRef}>
-      <button onClick={() => setShowMenu(!showMenu)} className="flex items-center gap-2">
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="flex items-center gap-2"
+      >
         {profileImg ? (
           <img
             src={profileImg}
@@ -81,5 +88,5 @@ export default function ConnectSpotify() {
         </div>
       )}
     </div>
-  )
+  );
 }

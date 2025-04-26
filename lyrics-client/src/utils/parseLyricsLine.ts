@@ -17,17 +17,18 @@ function katakanaToHiragana(str: string): string {
   });
 }
 
-
-export async function parseLyricsLine(text: string, tokenizer: any): Promise<LyricsWord[]> {
+export async function parseLyricsLine(
+  text: string,
+  tokenizer: any
+): Promise<LyricsWord[]> {
   const tokens = tokenizer.tokenize(text);
-  console.log(tokens)
-  return tokens.map(token => {
+  console.log(tokens);
+  return tokens.map((token) => {
     const surface = token.surface_form;
     const rawReading = token.reading || undefined;
     const reading = rawReading ? katakanaToHiragana(rawReading) : undefined;
     const pos = token.pos || undefined;
 
     return { surface, reading, pos };
-
   });
 }

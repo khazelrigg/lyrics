@@ -5,7 +5,7 @@ let tokenizerInstance: any = null;
 const myLoader: kuromoji.LoaderConfig = {
   async loadArrayBuffer(url: string): Promise<ArrayBufferLike> {
     url = url.replace(".gz", "");
-    const res = await fetch('/dict/' + url);
+    const res = await fetch("/dict/" + url);
     if (!res.ok) {
       throw new Error(`Failed to fetch ${url}, status: ${res.status}`);
     }
@@ -18,7 +18,9 @@ export async function loadTokenizer() {
     return tokenizerInstance;
   }
 
-  tokenizerInstance = await new kuromoji.TokenizerBuilder({ loader: myLoader }).build();
+  tokenizerInstance = await new kuromoji.TokenizerBuilder({
+    loader: myLoader,
+  }).build();
   console.log("[KuromojiLoader] Tokenizer built.");
   return tokenizerInstance;
 }

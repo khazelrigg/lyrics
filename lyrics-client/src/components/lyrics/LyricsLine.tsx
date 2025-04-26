@@ -3,7 +3,7 @@ import { forwardRef, useState } from "react";
 import { LyricsLineData } from "../../types/lyrics";
 import { seek } from "../../services/spotifyApi";
 
-import LyricsWord from "./LyricsWord"
+import LyricsWord from "./LyricsWord";
 
 interface LyricsLineProps extends LyricsLineData {
   isActive: boolean;
@@ -16,7 +16,18 @@ interface LyricsLineProps extends LyricsLineData {
  * Handles styles depending on whether the line is active or past.
  */
 const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
-  function LyricsLine({ text, parsedWords, start_time: startTime, isActive, isPast, onClick, furiganaMode = "always" }, ref) {
+  function LyricsLine(
+    {
+      text,
+      parsedWords,
+      start_time: startTime,
+      isActive,
+      isPast,
+      onClick,
+      furiganaMode = "always",
+    },
+    ref
+  ) {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleSeek = async () => {
@@ -34,7 +45,6 @@ const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
         ${!isPast && !isActive ? "text-gray-600" : ""}
         `}
       >
-
         <p className="text-xs text-gray-400">{startTime} ms</p>
 
         {text === "♪" ? (

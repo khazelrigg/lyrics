@@ -1,33 +1,33 @@
 // src/hooks/useLyrics.ts
-import { useEffect, useState } from "react"
-import { useSpotifyStore } from "../store/spotifyStore"
-import type { LyricsData } from "../types/lyrics"
+import { useEffect, useState } from "react";
+import { useSpotifyStore } from "../store/spotifyStore";
+import type { LyricsData } from "../types/lyrics";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export function useLyrics(source: string = "SpotifyLyricsSource") {
-  const trackId = useSpotifyStore((s) => s.track?.trackId)
-  const [lyrics, setLyrics] = useState<LyricsData | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const trackId = useSpotifyStore((s) => s.track?.trackId);
+  const [lyrics, setLyrics] = useState<LyricsData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!trackId) return
+    if (!trackId) return;
 
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     fetch(`${BASE_URL}/lyrics?song_id=${trackId}&source=${source}`)
       .then((res) => {
-        if (!res.ok) throw new Error("Lyrics not found")
-        return res.json()
+        if (!res.ok) throw new Error("Lyrics not found");
+        return res.json();
       })
       .then((data) => {
-        setLyrics(data)
+        setLyrics(data);
       })
       .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [trackId])
+      .finally(() => setLoading(false));
+  }, [trackId]);
 
-  return { lyrics, loading, error }
+  return { lyrics, loading, error };
 }
