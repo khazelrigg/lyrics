@@ -1,19 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-//import './App.css'
+import MobileLayout from "@/layouts/MobileLayout";
+import DesktopLayout from "@/layouts/DesktopLayout";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
-// shadcn imports
-import { Button } from "@/components/ui/button"
+import { ThemeProvider } from "@/components/theme-provider"
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function HomePage() {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   return (
-    <>
-      <Button variant="outline">I'm a shadcn button</Button>
-    </>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      {isDesktop ? <DesktopLayout /> : <MobileLayout />}
+    </ThemeProvider>
   )
 }
-
-export default App
