@@ -4,3 +4,5 @@ auth/
 *.pyc
 __pycache__/
 inspo/
+
+lyrics-api/lyrics_cache.db
