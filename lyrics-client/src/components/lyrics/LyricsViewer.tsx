@@ -102,7 +102,7 @@ export default function LyricsViewer({ lyrics }: LyricsViewerProps) {
     <div className="flex flex-col items-center w-full space-y-2 max-h-screen font-lyrics">
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto rounded-xl p-4 bg-white/5 backdrop-blur scroll-smooth max-h-full"
+        className="w-[80vw] flex-1 overflow-y-auto rounded-xl p-4 bg-white/5 backdrop-blur scroll-smooth max-h-full"
       >
         <p className="text-2xl font-bold">
           Lyrics to {parsedLyrics.title} by {parsedLyrics.artist} from{" "}

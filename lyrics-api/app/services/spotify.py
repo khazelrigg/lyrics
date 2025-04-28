@@ -49,8 +49,8 @@ class SpotifyLyricsSource(LyricsSource):
                 #async with session.get(endpoint, params=params) as response:
                     response.raise_for_status()
 
-                    print("Response received from local API")
-                    print(response)
+                    #print("Response received from local API")
+                    #print(response)
                     return await response.json()
             except aiohttp.ClientError as e:
                 print(f"Request failed: {e}")
@@ -95,7 +95,7 @@ class SpotifyLyricsSource(LyricsSource):
 
 
 
-            print("Syrics API returned a response: %s", response)
+            #print("Syrics API returned a response: %s", response)
             #print(syrics_api_response)
 
             if response is None or "lines" not in response:
@@ -119,7 +119,7 @@ class SpotifyLyricsSource(LyricsSource):
                 return result
 
             is_synced = response["syncType"] == "LINE_SYNCED"
-            print("Is synced:", is_synced)
+            #print("Is synced:", is_synced)
 
             #if response_lyrics["syncType"] == "LINE_SYNCED":
 
@@ -138,7 +138,7 @@ class SpotifyLyricsSource(LyricsSource):
                 #    "startTimeMs": int(line["startTimeMs"]) if line["startTimeMs"] else None
                 #})
 
-            print("Read lines from the response: ", lyrics_lines)
+            #print("Read lines from the response: ", lyrics_lines)
             #paused = add_pause_lines(lyrics_lines)
 
             return LyricsData(

@@ -1,7 +1,19 @@
-Start the local search API with python
-cd lyrics-api
-source venv/bin/activate
-uvicorn app.main:app --reload
+# lyrics-api
+
+A simple fast api to scrape lyrics from multiple sources
+
+## TODO: 
+* Add [lrcLib](https://lrclib.net/) as a new service
+* For spotify, need to fetch the track info using the song_id
+
+
+## Setup
+
+ Start the local search API with python
+
+    cd lyrics-api
+    source venv/bin/activate
+    uvicorn app.main:app --reload
 
 
 ## Environment Config

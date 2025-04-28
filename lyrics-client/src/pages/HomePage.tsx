@@ -62,11 +62,12 @@ export default function HomePage() {
   const { lyrics, loading, error } = useLyrics();
 
   return (
-    <div className="flex flex-col">
-      <div className="px-4">
+    <div className="flex-1 flex flex-col w-full">
+      <div className="px-4 items-center w-full">
         <NowPlayingDebugCard />
-        <hr className="my-4 border-white/20" />
       </div>
+
+      <hr className="my-4 border-white/20" />
 
       {/* Main content fills remaining space */}
       <main className="flex-1 flex flex-col px-4">

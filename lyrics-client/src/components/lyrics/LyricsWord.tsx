@@ -22,7 +22,7 @@ export default function LyricsWord({
     setIsHighlighted((prev) => !prev);
   };
 
-  const highlightClass = isHighlighted ? "bg-yellow-800 rounded" : "";
+  const highlightClass = isHighlighted ? "bg-yellow-200 text-gray-800 rounded" : "";
 
   if (!hasKanji(surface)) {
     reading = "";
@@ -31,7 +31,7 @@ export default function LyricsWord({
   if (!reading || furiganaMode === "none") {
     return (
       <span
-        className={`cursor-pointer px-1 ${highlightClass}`}
+        className={`text-2xl cursor-pointer px-1 ${highlightClass}`}
         onClick={handleClick}
       >
         {surface}
@@ -42,7 +42,7 @@ export default function LyricsWord({
   if (furiganaMode === "always") {
     return (
       <ruby
-        className={`cursor-pointer px-1 ${highlightClass}`}
+        className={`text-2xl cursor-pointer px-1 ${highlightClass}`}
         onClick={handleClick}
       >
         {surface}
@@ -54,11 +54,11 @@ export default function LyricsWord({
   if (furiganaMode === "hover") {
     return (
       <ruby
-        className={`group cursor-pointer px-1 ${highlightClass}`}
+        className={`text-2xl group cursor-pointer px-1  ${highlightClass}`}
         onClick={handleClick}
       >
         {surface}
-        <rt className="opacity-0 group-hover:opacity-100 transition-opacity">
+        <rt className="text-2xl opacity-0 group-hover:opacity-100 transition-opacity">
           {reading}
         </rt>
       </ruby>
@@ -67,7 +67,7 @@ export default function LyricsWord({
 
   return (
     <span
-      className={`cursor-pointer px-1 ${highlightClass}`}
+      className={`text-2xl cursor-pointer px-1 ${highlightClass}`}
       onClick={handleClick}
     >
       {surface}
