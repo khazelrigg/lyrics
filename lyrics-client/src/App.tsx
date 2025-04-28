@@ -1,17 +1,19 @@
-import { Routes, Route } from "react-router-dom"
-import HomePage from "./pages/HomePage"
-import SearchPage from "./pages/SearchPage"
-import SettingsPage from "./pages/SettingsPage"
-import CallbackPage from "./pages/CallbackPage"
-import Layout from "./layout/Layout"
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+//import './App.css'
 
-export default function App() {
+// shadcn imports
+import { Button } from "@/components/ui/button"
+
+function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout><HomePage /></Layout>} />
-      <Route path="/search" element={<Layout><SearchPage /></Layout>} />
-      <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
-      <Route path="/callback" element={<CallbackPage />} />
-    </Routes>
+    <>
+      <Button variant="outline">I'm a shadcn button</Button>
+    </>
   )
 }
+
+export default App
