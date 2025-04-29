@@ -63,3 +63,17 @@ export async function seek(ms: number) {
     headers: authHeaders(),
   });
 }
+
+export async function repeat(state: "track" | "context" | "off") {
+  return fetch(`${SPOTIFY_BASE}/me/player/repeat?state=${state}`, {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+}
+
+export async function shuffle(state: boolean) {
+  return fetch(`${SPOTIFY_BASE}/me/player/shuffle?state=${state}`, {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+}

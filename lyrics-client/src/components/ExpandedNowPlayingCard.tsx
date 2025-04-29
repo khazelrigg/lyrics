@@ -8,6 +8,9 @@ import {
   PauseIcon,
   SkipForwardIcon,
   SkipBackIcon,
+  Shuffle,
+  Repeat,
+  Repeat1,
 } from "lucide-react";
 import { useSpotifyStore } from "@/stores/spotifyStore";
 import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
@@ -15,21 +18,29 @@ import {
   play,
   pause,
   seek,
+  shuffle as shuffleApi,
+  repeat as repeatApi,
   nextTrack,
   previousTrack,
 } from "@/services/spotify/api";
 
 export default function ExpandedNowPlayingCard() {
-  const { track, isPlaying } = useSpotifyStore();
+  const {
+    track,
+    isPlaying,
+    shuffle_state,
+    repeat_state,
+    setShuffleState,
+    setRepeatState,
+  } = useSpotifyStore();
   const estimatedTime = useEstimatedProgress();
   const [isDragging, setIsDragging] = useState(false);
   const [dragValue, setDragValue] = useState<number | null>(null);
 
   if (!track) {
-    return null; // Don't render anything if no track is playing
+    return null;
   }
 
-  // Format time helper
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
@@ -39,6 +50,30 @@ export default function ExpandedNowPlayingCard() {
 
   const displayedProgress =
     isDragging && dragValue !== null ? dragValue : estimatedTime;
+
+  const toggleShuffle = async () => {
+    const newShuffle = !shuffle_state;
+    try {
+      await shuffleApi(newShuffle);
+      setShuffleState(newShuffle);
+    } catch (err) {
+      console.error("Failed to toggle shuffle:", err);
+    }
+  };
+
+  const toggleRepeat = async () => {
+    let nextRepeat: string;
+    if (repeat_state === "off") nextRepeat = "context";
+    else if (repeat_state === "context") nextRepeat = "track";
+    else nextRepeat = "off";
+
+    try {
+      await repeatApi(nextRepeat);
+      setRepeatState(nextRepeat);
+    } catch (err) {
+      console.error("Failed to toggle repeat:", err);
+    }
+  };
 
   const handleSeek = async (value: number[]) => {
     const ms = value[0];
@@ -81,12 +116,35 @@ export default function ExpandedNowPlayingCard() {
         </p>
       </div>
 
+      {/* Seek Bar */}
+      <div className="w-full space-y-2">
+        <Slider
+          value={[Math.min(displayedProgress, track.duration)]}
+          min={0}
+          max={track.duration}
+          step={1000}
+          onValueChange={handleDragging}
+          onValueCommit={handleSeek}
+        />
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+          <span>{formatTime(displayedProgress)}</span>
+          <span>{formatTime(track.duration)}</span>
+        </div>
+      </div>
+
       {/* Playback Controls */}
       <div className="flex items-center gap-6">
+        {/* Shuffle */}
+        <Button size="icon" variant="ghost" onClick={toggleShuffle}>
+          <Shuffle className={`w-6 h-6 ${shuffle_state ? "text-green-500" : ""}`} />
+        </Button>
+
+        {/* Previous Track */}
         <Button size="icon" variant="ghost" onClick={previousTrack}>
           <SkipBackIcon className="w-6 h-6" />
         </Button>
 
+        {/* Play / Pause */}
         <Button
           size="icon"
           variant="default"
@@ -110,25 +168,19 @@ export default function ExpandedNowPlayingCard() {
           )}
         </Button>
 
+        {/* Next Track */}
         <Button size="icon" variant="ghost" onClick={nextTrack}>
           <SkipForwardIcon className="w-6 h-6" />
         </Button>
-      </div>
 
-      {/* Seek Bar */}
-      <div className="w-full space-y-2">
-        <Slider
-          value={[Math.min(displayedProgress, track.duration)]}
-          min={0}
-          max={track.duration}
-          step={1000}
-          onValueChange={handleDragging} // 🔥 actively updates while dragging
-          onValueCommit={handleSeek} // 🔥 when drag is released
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
-          <span>{formatTime(displayedProgress)}</span>
-          <span>{formatTime(track.duration)}</span>
-        </div>
+        {/* Repeat */}
+        <Button size="icon" variant="ghost" onClick={toggleRepeat}>
+          {repeat_state === "track" ? (
+            <Repeat1 className="w-6 h-6 text-green-500" />
+          ) : (
+            <Repeat className={`w-6 h-6 ${repeat_state !== "off" ? "text-green-500" : ""}`} />
+          )}
+        </Button>
       </div>
     </div>
   );

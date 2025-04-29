@@ -18,11 +18,15 @@ interface SpotifyState {
   currentTime: number;
   isPlaying: boolean;
   lastUpdatedAt: number;
+  shuffle_state: boolean;
+  repeat_state: string;
 
   connect: (username: string, profileImg: string | null) => void;
   disconnect: () => void;
   setTrack: (track: SpotifyTrackInfo) => void;
   setPlayback: (currentTime: number, isPlaying: boolean) => void;
+  setShuffleState: (shuffle_state: boolean) => void;
+  setRepeatState: (repeat_state: string) => void;
 }
 
 export const useSpotifyStore = create<SpotifyState>((set) => ({
@@ -33,6 +37,8 @@ export const useSpotifyStore = create<SpotifyState>((set) => ({
   currentTime: 0,
   isPlaying: false,
   lastUpdatedAt: Date.now(),
+  shuffle_state: false,
+  repeat_state: "off",
 
   connect: (username, profileImg) =>
     set({ connected: true, username, profileImg }),
@@ -60,4 +66,7 @@ export const useSpotifyStore = create<SpotifyState>((set) => ({
       isPlaying,
       lastUpdatedAt: Date.now(),
     }),
+
+    setShuffleState: (shuffle_state: boolean) => set({ shuffle_state }),
+    setRepeatState: (repeat_state: string) => set({ repeat_state }),
 }));
