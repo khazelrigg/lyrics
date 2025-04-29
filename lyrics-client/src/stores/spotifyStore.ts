@@ -1,20 +1,15 @@
 import { create } from "zustand";
 
-interface SpotifyTrackInfo {
-  title: string;
-  artist: string;
-  album: string;
-  albumArt: string;
-  trackId: string;
-  url: string;
-  duration: number;
-}
+import { SpotifyTrackInfo } from "@/types/spotify";
 
 interface SpotifyState {
   connected: boolean;
   username: string | null;
   profileImg: string | null;
   track: SpotifyTrackInfo | null;
+  prevTrack: SpotifyTrackInfo | null;
+  nextTrack: SpotifyTrackInfo | null;
+
   currentTime: number;
   isPlaying: boolean;
   lastUpdatedAt: number;
@@ -29,11 +24,14 @@ interface SpotifyState {
   setRepeatState: (repeat_state: string) => void;
 }
 
+
 export const useSpotifyStore = create<SpotifyState>((set) => ({
   connected: false,
   username: null,
   profileImg: null,
   track: null,
+  prevTrack: null,
+  nextTrack: null,
   currentTime: 0,
   isPlaying: false,
   lastUpdatedAt: Date.now(),
@@ -49,8 +47,12 @@ export const useSpotifyStore = create<SpotifyState>((set) => ({
       username: null,
       profileImg: null,
       track: null,
+      nextTrack: null,
+      prevTrack: null,
       currentTime: 0,
       isPlaying: false,
+      shuffle_state: false,
+      repeat_state: "off",
       lastUpdatedAt: Date.now(),
     }),
 
@@ -69,4 +71,7 @@ export const useSpotifyStore = create<SpotifyState>((set) => ({
 
     setShuffleState: (shuffle_state: boolean) => set({ shuffle_state }),
     setRepeatState: (repeat_state: string) => set({ repeat_state }),
+
+    setNextTrack: (track) => set({ nextTrack: track }),
+    setPreviousTrack: (track) => set({ previousTrack: track }),
 }));

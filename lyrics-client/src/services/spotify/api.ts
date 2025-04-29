@@ -29,6 +29,24 @@ export async function getPlaybackStatus() {
   return await res.json();
 }
 
+export async function recentlyPlayed(limit: number) {
+  const res = await fetch(`${SPOTIFY_BASE}/me/player/recently-played?limit=${limit}`, {
+    method: "GET",
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch recently played tracks");
+  return res.json();
+}
+
+export async function getQueue() {
+  const res = await fetch(`${SPOTIFY_BASE}/me/player/queue`, {
+    method: "GET",
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch queue");
+  return res.json();
+}
+
 export async function play() {
   return fetch(`${SPOTIFY_BASE}/me/player/play`, {
     method: "PUT",

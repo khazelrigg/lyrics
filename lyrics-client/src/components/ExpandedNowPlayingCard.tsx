@@ -119,16 +119,16 @@ export default function ExpandedNowPlayingCard() {
       {/* Seek Bar */}
       <div className="w-full space-y-2">
         <Slider
-          value={[Math.min(displayedProgress, track.duration)]}
+          value={[Math.min(displayedProgress, track.duration_ms)]}
           min={0}
-          max={track.duration}
+          max={track.duration_ms}
           step={1000}
           onValueChange={handleDragging}
           onValueCommit={handleSeek}
         />
         <div className="flex justify-between text-xs text-muted-foreground mt-1">
           <span>{formatTime(displayedProgress)}</span>
-          <span>{formatTime(track.duration)}</span>
+          <span>{formatTime(track.duration_ms)}</span>
         </div>
       </div>
 

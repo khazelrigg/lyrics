@@ -1,8 +1,9 @@
-// src/hooks/useSpotifyPolling.ts
+"use client";
 
 import { useEffect, useRef } from "react";
 import { getPlaybackStatus } from "@/services/spotify/api";
 import { useSpotifyStore } from "@/stores/spotifyStore";
+import { parseTrack } from "@/services/spotify/utils"; // Move parseTrack into a utils file ideally!
 
 export function useSpotifyNowPlaying() {
   const setTrack = useSpotifyStore((s) => s.setTrack);
@@ -20,21 +21,9 @@ export function useSpotifyNowPlaying() {
       try {
         const data = await getPlaybackStatus();
         if (!data?.item) return;
+        
+        setTrack(parseTrack(data.item));
 
-        // Update track if trackId changes
-        setTrack({
-          title: data.item.name,
-          artist: data.item.artists
-            .map((a: { name: string }) => a.name)
-            .join(", "),
-          album: data.item.album.name,
-          albumArt: data.item.album.images?.[0]?.url || "",
-          trackId: data.item.id,
-          url: data.item.external_urls?.spotify || "",
-          duration: data.item.duration_ms,
-        });
-
-        // Update currentTime and isPlaying
         setPlayback(data.progress_ms, data.is_playing);
         setShuffleState(data.shuffle_state);
         setRepeatState(data.repeat_state);
@@ -43,7 +32,7 @@ export function useSpotifyNowPlaying() {
       }
     };
 
-    fetchStatus(); // Fetch immediately when hook loads
+    fetchStatus();
 
     const getIntervalMs = () => (isPlaying ? 500 : 3000);
 
