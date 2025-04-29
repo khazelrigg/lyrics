@@ -82,7 +82,11 @@ export async function seek(ms: number) {
   });
 }
 
-export async function repeat(state: "track" | "context" | "off") {
+export async function repeat(state: string) {
+  if (state !== "track" && state !== "context" && state !== "off") {
+    throw new Error("Invalid repeat state. Must be 'track', 'context', or 'off'");
+  }
+
   return fetch(`${SPOTIFY_BASE}/me/player/repeat?state=${state}`, {
     method: "PUT",
     headers: authHeaders(),

@@ -9,7 +9,7 @@ export default function MobileLayout() {
       <Header />
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-gray-100">
+      <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950">
         <LyricsScroll />
       </main>
 

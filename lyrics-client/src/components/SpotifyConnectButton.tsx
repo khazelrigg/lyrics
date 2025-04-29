@@ -64,9 +64,9 @@ export default function SpotifyConnectButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button variant="outline" className="flex items-center gap-2 w-8 h-8">
           <span className="hidden md:inline">{username}</span> {/* Username on desktop */}
-          <Avatar className="w-8 h-8">
+          <Avatar className="w-6 h-6">
             {profileImg ? (
               <AvatarImage src={profileImg} alt="Spotify profile" />
             ) : (

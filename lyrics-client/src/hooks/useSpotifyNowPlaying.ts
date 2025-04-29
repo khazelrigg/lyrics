@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getPlaybackStatus } from "@/services/spotify/api";
+import { getPlaybackStatus, getQueue } from "@/services/spotify/api";
 import { useSpotifyStore } from "@/stores/spotifyStore";
 import { parseTrack } from "@/services/spotify/utils"; // Move parseTrack into a utils file ideally!
 
 export function useSpotifyNowPlaying() {
   const setTrack = useSpotifyStore((s) => s.setTrack);
+  const setNextTrack = useSpotifyStore((s) => s.setNextTrack);
   const setPlayback = useSpotifyStore((s) => s.setPlayback);
   const setShuffleState = useSpotifyStore((s) => s.setShuffleState);
   const setRepeatState = useSpotifyStore((s) => s.setRepeatState);
@@ -23,10 +24,14 @@ export function useSpotifyNowPlaying() {
         if (!data?.item) return;
         
         setTrack(parseTrack(data.item));
-
         setPlayback(data.progress_ms, data.is_playing);
         setShuffleState(data.shuffle_state);
         setRepeatState(data.repeat_state);
+
+        const queue = await getQueue();
+        if (!queue) return;
+        setNextTrack(parseTrack(queue.queue[0]));
+
       } catch (err) {
         console.warn("Spotify polling error:", err);
       }
@@ -46,12 +51,5 @@ export function useSpotifyNowPlaying() {
     return () => {
       if (intervalRef.current) clearTimeout(intervalRef.current);
     };
-  }, [
-    setTrack,
-    setPlayback,
-    setShuffleState,
-    setRepeatState,
-    isPlaying,
-    connected,
-  ]);
+  }, [setTrack, setPlayback, setShuffleState, setRepeatState, isPlaying, connected, setNextTrack]);
 }

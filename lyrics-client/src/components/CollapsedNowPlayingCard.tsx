@@ -64,7 +64,7 @@ export default function CollapsedNowPlayingCard() {
       {/* Card */}
       <div className="flex items-center justify-between w-full px-4 py-3 shadow-md rounded-t-lg border caret-transparent bg-background">
         {/* Album Art */}
-        <div className="w-10 h-10 rounded-md overflow-hidden bg-muted flex-shrink-0 pr-2 relative z-10">
+        <div className="w-10 h-10 rounded-md overflow-hidden bg-muted flex-shrink-0 relative z-10">
           {track.albumArt ? (
             <img
               src={track.albumArt}

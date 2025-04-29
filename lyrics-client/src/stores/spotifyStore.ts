@@ -21,9 +21,10 @@ interface SpotifyState {
   setTrack: (track: SpotifyTrackInfo) => void;
   setPlayback: (currentTime: number, isPlaying: boolean) => void;
   setShuffleState: (shuffle_state: boolean) => void;
-  setRepeatState: (repeat_state: string) => void;
+  setRepeatState: (repeat_state: string) => void; 
+  setNextTrack: (track: SpotifyTrackInfo) => void;
+  setPreviousTrack: (track: SpotifyTrackInfo) => void;
 }
-
 
 export const useSpotifyStore = create<SpotifyState>((set) => ({
   connected: false,
