@@ -1,15 +1,12 @@
-import MobileLayout from "@/layouts/MobileLayout";
-import DesktopLayout from "@/layouts/DesktopLayout";
-import useMediaQuery from "@/hooks/useMediaQuery";
+import { Routes, Route } from "react-router-dom"
+import HomePage from "@/pages/home"
+import CallbackPage from "@/pages/callback"
 
-import { ThemeProvider } from "@/components/theme-provider"
-
-export default function HomePage() {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-
+export default function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      {isDesktop ? <DesktopLayout /> : <MobileLayout />}
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/callback" element={<CallbackPage />} />
+    </Routes>
   )
 }

@@ -1,13 +1,11 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
-import SpotifyLogo from "@/assets/spotify.svg";
 import LogoIcon from "@/components/LogoIcon";
 
 import SearchModal from "@/components/SearchModal"; // (new)
 import { ModeToggle } from "../ModeToggle";
-import { SpotifyConnectButton } from "../SpotifyConnectButton";
+import  SpotifyConnectButton  from "@/components/SpotifyConnectButton";
 
 
 export default function Header() {
