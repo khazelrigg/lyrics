@@ -22,7 +22,7 @@ import {
 
 import SpotifyLogo from "@/assets/spotify.svg";
 
-import { useSpotifyStore } from "@/stores/spotifyStore"; // <-- new
+import { useSpotifyStore } from "@/stores/spotifyStore"; 
 
 export default function SpotifyConnectButton() {
   const { connected, username, profileImg, connect, disconnect } = useSpotifyStore();
@@ -51,10 +51,7 @@ export default function SpotifyConnectButton() {
   // Connect button when signed out
   if (!connected) {
     return (
-      <Button
-        onClick={initiateSpotifyAuth}
-        variant="default"
-      >
+      <Button onClick={initiateSpotifyAuth} variant="default" size="icon">
         <span className="hidden md:inline">Connect</span>
         <img className="h-6 w-6" src={SpotifyLogo}></img>
       </Button>
@@ -70,7 +67,7 @@ export default function SpotifyConnectButton() {
             {profileImg ? (
               <AvatarImage src={profileImg} alt="Spotify profile" />
             ) : (
-              <AvatarFallback>{username?.charAt(0) || "S"}</AvatarFallback>
+              <AvatarFallback>{username?.charAt(0) || "?"}</AvatarFallback>
             )}
           </Avatar>
         </Button>
