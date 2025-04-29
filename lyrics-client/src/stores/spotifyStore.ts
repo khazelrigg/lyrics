@@ -74,5 +74,5 @@ export const useSpotifyStore = create<SpotifyState>((set) => ({
     setRepeatState: (repeat_state: string) => set({ repeat_state }),
 
     setNextTrack: (track) => set({ nextTrack: track }),
-    setPreviousTrack: (track) => set({ previousTrack: track }),
+    setPreviousTrack: (track) => set({ prevTrack: track }),
 }));

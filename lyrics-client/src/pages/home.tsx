@@ -4,10 +4,13 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { useSpotifyNowPlaying } from "@/hooks/useSpotifyNowPlaying";
+import { useSpotifyAuthGuard } from "@/hooks/useSpotifyAuthGuard";
 
 export default function HomePage() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  // Hook to keep spotify authenticated
+  useSpotifyAuthGuard();
   // Hook to watch spotify playback
   useSpotifyNowPlaying();
 

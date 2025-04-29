@@ -33,9 +33,14 @@ export default function SpotifyConnectButton() {
 
     getUserProfile()
       .then((data) => {
-        const profileImg = data.images?.[0]?.url || null;
-        const username = data.display_name || "Spotify User";
-        connect(username, profileImg);
+        // Check we got data
+        if (data) {
+          const profileImg = data.images?.[0]?.url || null;
+          const username = data.display_name || "Spotify User";
+          connect(username, profileImg);
+        } else {
+          disconnect();
+        }
       })
       .catch(() => {
         disconnect(); // if fetching user fails, clear store

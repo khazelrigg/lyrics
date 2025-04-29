@@ -9,16 +9,18 @@ export default function CallbackPage() {
   useEffect(() => {
     try {
       const token = extractTokenFromUrl();
+      
       if (token) {
         // ✅ Redirect after token is saved
+        console.log("Got token:", token);
         navigate("/");
       } else {
         setError("No access token found in URL.");
       }
     } catch (err) {
-      setError("Failed to extract token.");
+      setError(`Failed to extract token: ${err}`);
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
