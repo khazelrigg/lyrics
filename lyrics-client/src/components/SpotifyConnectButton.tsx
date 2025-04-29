@@ -6,8 +6,10 @@ import {
   initiateSpotifyAuth,
   getAccessToken,
   clearAccessToken,
-  getUserProfile,
-} from "@/services/spotifyAuth";
+} from "@/services/spotify/auth";
+
+import { getUserProfile } from "@/services/spotify/api";
+
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {

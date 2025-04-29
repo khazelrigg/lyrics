@@ -12,7 +12,7 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="flex items-center justify-between p-4 shadow-md border-b">
+    <header className="flex items-center justify-between p-4 shadow-lg border-b">
       <div className="flex flex-row items-center gap-2 text-xl font-bold hover:text-blue-400 transition-colors cursor-pointer">
         <LogoIcon className="w-8 h-8 text-blue-400" />
         <span className="text-2xl">Lyringo</span>

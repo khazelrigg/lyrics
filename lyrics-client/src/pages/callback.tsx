@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { extractTokenFromUrl } from "@/services/spotifyAuth";
+import { extractTokenFromUrl } from "@/services/spotify/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function CallbackPage() {

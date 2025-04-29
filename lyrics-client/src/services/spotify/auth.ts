@@ -53,20 +53,3 @@ export function getAccessToken(): string | null {
 export function clearAccessToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
-
-function authHeaders() {
-  const token = getAccessToken();
-  if (!token) throw new Error("Missing access token");
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-}
-
-export async function getUserProfile() {
-  const res = await fetch("https://api.spotify.com/v1/me", {
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error("Failed to fetch user profile");
-  return await res.json();
-}
