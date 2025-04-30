@@ -2,6 +2,7 @@ import {
   getAccessToken,
   clearAccessToken,
   isTokenExpired,
+  initiateSpotifyAuth,
 } from "./auth";
 
 const SPOTIFY_BASE = "https://api.spotify.com/v1";
@@ -13,6 +14,7 @@ export async function spotifyFetch<T = unknown>(
   const token = getAccessToken();
   if (!token || isTokenExpired()) {
     clearAccessToken();
+    initiateSpotifyAuth();
     throw new Error("Missing or expired Spotify access token");
   }
   try {

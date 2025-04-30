@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useSpotifyStore } from "@/stores/spotifyStore";
 import { play, pause, nextTrack, previousTrack } from "@/services/spotify/api";
 
@@ -11,11 +10,9 @@ import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
 
 export default function CollapsedCard() {
   const estimatedTime = useEstimatedProgress();
-  const { track, isPlaying } = useSpotifyStore();
+  const { track, isPlaying, setTrack } = useSpotifyStore();
   const x = useMotionValue(0);
-  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(
-    null
-  );
+
   const SWIPE_TRIGGER = 20; // Adjust the sensitivty of swipe release to skip track
 
   const textOpacity = useTransform(
@@ -23,21 +20,13 @@ export default function CollapsedCard() {
     [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER],
     [0, 1, 0]
   );
-  const swipeProgress = useTransform(
-    x,
-    [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER],
-    [1, 0, 1]
-  );
-  const activeColor = useTransform(
-    x,
-    [-SWIPE_TRIGGER, -40, 40, SWIPE_TRIGGER],
-    ["#00FF00", "#888888", "#888888", "#00FF00"]
-  );
 
+  // If no track, set a blank/dummy value for skeleton
   if (!track) return null;
 
-  const progressPercent =
-    track.duration_ms > 0 ? (estimatedTime / track.duration_ms) * 100 : 0;
+  const progressPercent = !track || track.duration_ms <= 0
+    ? 0
+    : (estimatedTime / track.duration_ms) * 100;
 
   const handleDragEnd = () => {
     const currentX = x.get();
@@ -47,38 +36,11 @@ export default function CollapsedCard() {
       nextTrack();
     }
     x.set(0);
-    setSwipeDirection(null);
   };
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* Swipe Hint */}
-      {swipeDirection && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-2 flex flex-col items-center text-green-500 pointer-events-none"
-        >
-          <svg width="40" height="40" viewBox="0 0 24 24">
-            <motion.path
-              d={swipeDirection === "left" ? "M8 4l8 8-8 8" : "M16 4l-8 8 8 8"}
-              fill="none"
-              stroke={activeColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ pathLength: swipeProgress }}
-            />
-          </svg>
-          <div className="text-xs mt-1">
-            {swipeDirection === "left" ? "Next" : "Back"}
-          </div>
-        </motion.div>
-      )}
-
       {/* Card */}
-
       <div className="flex items-center justify-between w-full px-4 py-3 shadow-md rounded-t-lg border caret-transparent bg-background">
         {/* Album Art */}
 
@@ -88,42 +50,34 @@ export default function CollapsedCard() {
               src={track.albumArt}
               alt={track.album}
               className="w-full h-full object-cover"
+              draggable={false}
             />
           ) : (
             <div className="w-full h-full bg-gray-300" />
           )}
         </div>
 
-        {/* Draggable Text */}
+        {/* Center: Draggable Text */}
         <motion.div
-          className="flex flex-col flex-grow text-left px-4 relative z-0"
+          className="flex flex-col flex-grow min-w-0 px-4 relative z-0 touch-none"
           style={{ x, opacity: textOpacity, touchAction: "none" }}
           drag="x"
           dragElastic={0.2}
           dragConstraints={{ left: 0, right: 0 }}
-          onDrag={() => {
-            const currentX = x.get();
-            if (currentX > 10) {
-              setSwipeDirection("right");
-            } else if (currentX < -10) {
-              setSwipeDirection("left");
-            } else {
-              setSwipeDirection(null);
-            }
-          }}
           onDragEnd={handleDragEnd}
         >
-          <span className="text-sm font-medium truncate">{track.title}</span>
+          <span className="text-sm font-medium truncate">{track.title || "Unknown Track"}</span>
           <span className="text-xs text-muted-foreground truncate">
-            {track.artist}
+            {track.artist || "Unknown Artist"}
           </span>
         </motion.div>
 
-        {/* Play/Pause Button */}
-        <div className="pl-4 flex-shrink-0 relative z-10">
+        {/* Right: Play Button */}
+        <div className="flex-shrink-0 pl-2 relative z-10">
           <Button
             size="icon"
             variant="ghost"
+            aria-label={isPlaying ? "Pause Track" : "Play Track"}
             onClick={(e) => {
               e.stopPropagation();
               if (isPlaying) {
@@ -141,10 +95,11 @@ export default function CollapsedCard() {
           </Button>
         </div>
       </div>
+
       {/* Progress bar below the card content */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-muted-foreground/30">
         <div
-          className="h-full bg-ui-accent transition-all duration-150 ease-linear"
+          className="h-full bg-ui-accent transition-all duration-150 ease-linear rounded-r"
           style={{ width: `${progressPercent}%` }}
         />
       </div>

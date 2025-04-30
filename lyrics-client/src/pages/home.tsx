@@ -5,6 +5,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import { ThemeProvider } from "@/components/layout/ThemeProvider"
 import { useSpotifyNowPlaying } from "@/hooks/useSpotifyNowPlaying";
 import { useSpotifyAuthGuard } from "@/hooks/useSpotifyAuthGuard";
+import { useLyrics } from "@/hooks/useLyrics";
 
 export default function HomePage() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -13,6 +14,8 @@ export default function HomePage() {
   useSpotifyAuthGuard();
   // Hook to watch spotify playback
   useSpotifyNowPlaying();
+  // Hook to get lyrics automatically
+  useLyrics();
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
