@@ -24,7 +24,7 @@ import {
   previousTrack,
 } from "@/services/spotify/api";
 
-export default function ExpandedNowPlayingCard() {
+export default function ExpandedCard() {
   const {
     track,
     isPlaying,

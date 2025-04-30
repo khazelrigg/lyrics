@@ -9,7 +9,7 @@ import { PlayIcon, PauseIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
 
-export default function CollapsedNowPlayingCard() {
+export default function CollapsedCard() {
   const estimatedTime = useEstimatedProgress();
   const { track, isPlaying } = useSpotifyStore();
   const x = useMotionValue(0);

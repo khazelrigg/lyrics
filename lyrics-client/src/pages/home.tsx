@@ -2,7 +2,7 @@ import MobileLayout from "@/layouts/MobileLayout";
 import DesktopLayout from "@/layouts/DesktopLayout";
 import useMediaQuery from "@/hooks/useMediaQuery";
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/layout/ThemeProvider"
 import { useSpotifyNowPlaying } from "@/hooks/useSpotifyNowPlaying";
 import { useSpotifyAuthGuard } from "@/hooks/useSpotifyAuthGuard";
 

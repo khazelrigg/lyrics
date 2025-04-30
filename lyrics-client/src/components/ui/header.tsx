@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
-import LogoIcon from "@/components/LogoIcon";
+import LogoIcon from "@/components/layout/LogoIcon";
 
-import SearchModal from "@/components/SearchModal"; // (new)
-import { ModeToggle } from "../ModeToggle";
-import  SpotifyConnectButton  from "@/components/SpotifyConnectButton";
+import SearchModal from "@/components/modals/SearchModal"; // (new)
+import { ModeToggle } from "@/components/layout/ModeToggle";
+import  SpotifyConnectButton  from "@/components/auth/SpotifyConnectButton";
 
 
 export default function Header() {

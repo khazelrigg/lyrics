@@ -1,6 +1,6 @@
 import Header from "@/components/ui/header";
 import LyricsScroll from "@/components/lyrics/LyricsScroll";
-import NowPlayingDrawer from "@/components/NowPlayingDrawer";
+import NowPlayingDrawer from "@/components/now-playing/Drawer";
 
 export default function MobileLayout() {
   return (
