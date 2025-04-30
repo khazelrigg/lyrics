@@ -68,7 +68,7 @@ export default function ExpandedNowPlayingCard() {
     else nextRepeat = "off";
 
     try {
-      await repeatApi(nextRepeat);
+      await repeatApi(nextRepeat as "off" | "context" | "track");
       setRepeatState(nextRepeat);
     } catch (err) {
       console.error("Failed to toggle repeat:", err);
@@ -108,15 +108,18 @@ export default function ExpandedNowPlayingCard() {
 
       {/* Song Info */}
       <div className="flex flex-col items-center">
-        <h2 className="text-lg font-semibold truncate max-w-xs">
+        <h2 className="text-md font-semibold truncate max-w-xs">
           {track.title}
         </h2>
         <p className="text-sm text-muted-foreground truncate max-w-xs">
           {track.artist}
         </p>
+        <p className="text-xs text-muted-foreground truncate max-w-xs">
+          {track.album}
+        </p>
       </div>
 
-      {/* Seek Bar */}
+      {/* Seek Bar/Slider */}
       <div className="w-full space-y-2">
         <Slider
           value={[Math.min(displayedProgress, track.duration_ms)]}
@@ -125,6 +128,7 @@ export default function ExpandedNowPlayingCard() {
           step={1000}
           onValueChange={handleDragging}
           onValueCommit={handleSeek}
+          className="[&_[data-slot=slider-range]]:bg-ui-accent [&_[data-slot=slider-thumb]]:border-gray-400"
         />
         <div className="flex justify-between text-xs text-muted-foreground mt-1">
           <span>{formatTime(displayedProgress)}</span>
@@ -136,19 +140,22 @@ export default function ExpandedNowPlayingCard() {
       <div className="flex items-center gap-6">
         {/* Shuffle */}
         <Button size="icon" variant="ghost" onClick={toggleShuffle}>
-          <Shuffle className={`w-6 h-6 ${shuffle_state ? "text-green-500" : ""}`} />
+          <Shuffle
+            strokeWidth={3}
+            className={`${shuffle_state ? "text-ui-accent" : ""}`}
+          />
         </Button>
 
         {/* Previous Track */}
         <Button size="icon" variant="ghost" onClick={previousTrack}>
-          <SkipBackIcon className="w-6 h-6" />
+          <SkipBackIcon strokeWidth={3} />
         </Button>
 
         {/* Play / Pause */}
         <Button
           size="icon"
           variant="default"
-          className="rounded-full w-14 h-14"
+          className="rounded-full bg-ui-accent w-14 h-14"
           onClick={async () => {
             try {
               if (isPlaying) {
@@ -162,23 +169,26 @@ export default function ExpandedNowPlayingCard() {
           }}
         >
           {isPlaying ? (
-            <PauseIcon className="w-8 h-8" />
+            <PauseIcon strokeWidth={2} className="dark:text-white !w-6 !h-6" />
           ) : (
-            <PlayIcon className="w-8 h-8" />
+            <PlayIcon strokeWidth={2} className="dark:text-white !w-6 !h-6" />
           )}
         </Button>
 
         {/* Next Track */}
         <Button size="icon" variant="ghost" onClick={nextTrack}>
-          <SkipForwardIcon className="w-6 h-6" />
+          <SkipForwardIcon strokeWidth={3} />
         </Button>
 
         {/* Repeat */}
         <Button size="icon" variant="ghost" onClick={toggleRepeat}>
           {repeat_state === "track" ? (
-            <Repeat1 className="w-6 h-6 text-green-500" />
+            <Repeat1 strokeWidth={3} className="text-ui-accent" />
           ) : (
-            <Repeat className={`w-6 h-6 ${repeat_state !== "off" ? "text-green-500" : ""}`} />
+            <Repeat
+              strokeWidth={3}
+              className={`${repeat_state !== "off" ? "text-ui-accent" : ""}`}
+            />
           )}
         </Button>
       </div>

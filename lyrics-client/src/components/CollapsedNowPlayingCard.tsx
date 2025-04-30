@@ -1,23 +1,43 @@
 "use client";
 
-import { PlayIcon, PauseIcon } from "lucide-react";
+import { useState } from "react";
 import { useSpotifyStore } from "@/stores/spotifyStore";
 import { play, pause, nextTrack, previousTrack } from "@/services/spotify/api";
-import { Button } from "@/components/ui/button";
+
 import { motion, useMotionValue, useTransform } from "motion/react";
-import { useState } from "react";
+import { PlayIcon, PauseIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
 
 export default function CollapsedNowPlayingCard() {
+  const estimatedTime = useEstimatedProgress();
   const { track, isPlaying } = useSpotifyStore();
   const x = useMotionValue(0);
-  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null);
-  const SWIPE_TRIGGER = 80;
+  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(
+    null
+  );
+  const SWIPE_TRIGGER = 20; // Adjust the sensitivty of swipe release to skip track
 
-  const textOpacity = useTransform(x, [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER], [0, 1, 0]);
-  const swipeProgress = useTransform(x, [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER], [1, 0, 1]);
-  const activeColor = useTransform(x, [-SWIPE_TRIGGER, -40, 40, SWIPE_TRIGGER], ["#00FF00", "#888888", "#888888", "#00FF00"]);
+  const textOpacity = useTransform(
+    x,
+    [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER],
+    [0, 1, 0]
+  );
+  const swipeProgress = useTransform(
+    x,
+    [-SWIPE_TRIGGER, 0, SWIPE_TRIGGER],
+    [1, 0, 1]
+  );
+  const activeColor = useTransform(
+    x,
+    [-SWIPE_TRIGGER, -40, 40, SWIPE_TRIGGER],
+    ["#00FF00", "#888888", "#888888", "#00FF00"]
+  );
 
   if (!track) return null;
+
+  const progressPercent =
+    track.duration_ms > 0 ? (estimatedTime / track.duration_ms) * 100 : 0;
 
   const handleDragEnd = () => {
     const currentX = x.get();
@@ -42,11 +62,7 @@ export default function CollapsedNowPlayingCard() {
         >
           <svg width="40" height="40" viewBox="0 0 24 24">
             <motion.path
-              d={
-                swipeDirection === "left"
-                  ? "M8 4l8 8-8 8"
-                  : "M16 4l-8 8 8 8"
-              }
+              d={swipeDirection === "left" ? "M8 4l8 8-8 8" : "M16 4l-8 8 8 8"}
               fill="none"
               stroke={activeColor}
               strokeWidth="2"
@@ -62,8 +78,10 @@ export default function CollapsedNowPlayingCard() {
       )}
 
       {/* Card */}
+
       <div className="flex items-center justify-between w-full px-4 py-3 shadow-md rounded-t-lg border caret-transparent bg-background">
         {/* Album Art */}
+
         <div className="w-10 h-10 rounded-md overflow-hidden bg-muted flex-shrink-0 relative z-10">
           {track.albumArt ? (
             <img
@@ -96,7 +114,9 @@ export default function CollapsedNowPlayingCard() {
           onDragEnd={handleDragEnd}
         >
           <span className="text-sm font-medium truncate">{track.title}</span>
-          <span className="text-xs text-muted-foreground truncate">{track.artist}</span>
+          <span className="text-xs text-muted-foreground truncate">
+            {track.artist}
+          </span>
         </motion.div>
 
         {/* Play/Pause Button */}
@@ -111,7 +131,8 @@ export default function CollapsedNowPlayingCard() {
               } else {
                 play();
               }
-            }}          >
+            }}
+          >
             {isPlaying ? (
               <PauseIcon className="text-gray-800 dark:text-gray-200" />
             ) : (
@@ -119,6 +140,13 @@ export default function CollapsedNowPlayingCard() {
             )}
           </Button>
         </div>
+      </div>
+      {/* Progress bar below the card content */}
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-muted-foreground/30">
+        <div
+          className="h-full bg-ui-accent transition-all duration-150 ease-linear"
+          style={{ width: `${progressPercent}%` }}
+        />
       </div>
     </div>
   );
