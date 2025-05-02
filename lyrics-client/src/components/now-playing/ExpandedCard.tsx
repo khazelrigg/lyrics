@@ -94,7 +94,7 @@ export default function ExpandedCard() {
   return (
     <div className="flex flex-col items-center w-full p-6 space-y-6">
       {/* Album Art */}
-      <div className="w-60 h-60 rounded-lg overflow-hidden bg-muted">
+      <div className="w-60 h-60 rounded-lg overflow-hidden bg-muted shadow-sm">
         {track.albumArt ? (
           <img
             src={track.albumArt}
