@@ -1,6 +1,7 @@
 import Header from "@/components/ui/header";
 import LyricsScroll from "@/components/lyrics/LyricsScroll";
 import NowPlayingDrawer from "@/components/now-playing/Drawer";
+import { FontSettingsDrawer } from "@/components/modals/FontSettings";
 
 export default function MobileLayout() {
   return (
@@ -13,9 +14,10 @@ export default function MobileLayout() {
         <LyricsScroll />
       </main>
 
-      {/* Now Playing Card fixed at bottom */}
+        {/* Now Playing Card fixed at bottom */}
       <div className="sticky bottom-0 w-full">
         <NowPlayingDrawer />
+        <FontSettingsDrawer />
       </div>
     </div>
   );

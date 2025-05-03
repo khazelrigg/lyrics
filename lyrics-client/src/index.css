@@ -1,9 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Serif+JP&family=Noto+Serif+KR&family=M+PLUS+Rounded+1c&family=M+PLUS+1+Code&family=Kosugi+Maru&family=Jua&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Custom Fonts */
+  --font-sans: "Noto Sans JP", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Noto Serif JP", "Noto Serif KR", ui-serif, Georgia, serif;
+  --font-mono: "M PLUS 1 Code", ui-monospace, SFMono-Regular, monospace;
+  --font-rounded: "M PLUS Rounded 1c", "Kosugi Maru", "Jua", sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
