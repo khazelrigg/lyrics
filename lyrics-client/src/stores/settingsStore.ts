@@ -19,7 +19,7 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>((set) => ({
   fontSettings: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "sans",
     textAlignment: "center",
   },

@@ -46,11 +46,12 @@ export function FontSettingsDrawer() {
         <Button
           variant="outline"
           size="icon"
-          className="fixed bottom-20 right-4 rounded-full p-2 bg-white shadow-md"
+          className="z-50 fixed bottom-20 right-4 rounded-full p-2 bg-white shadow-md"
           aria-label="Font settings"
         >
           <Type className="h-5 w-5" />
         </Button>
+
       </DrawerTrigger>
       <DrawerContent className="bg-white">
         <div className="mx-auto w-full max-w-sm">

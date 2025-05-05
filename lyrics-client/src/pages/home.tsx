@@ -2,6 +2,7 @@ import MobileLayout from "@/layouts/MobileLayout";
 import DesktopLayout from "@/layouts/DesktopLayout";
 import useMediaQuery from "@/hooks/useMediaQuery";
 
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/layout/ThemeProvider"
 import { useSpotifyNowPlaying } from "@/hooks/useSpotifyNowPlaying";
 import { useSpotifyAuthGuard } from "@/hooks/useSpotifyAuthGuard";
@@ -20,6 +21,7 @@ export default function HomePage() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       {isDesktop ? <DesktopLayout /> : <MobileLayout />}
+      <Toaster />
     </ThemeProvider>
   )
 }

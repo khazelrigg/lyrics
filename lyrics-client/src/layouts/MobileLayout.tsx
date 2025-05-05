@@ -11,13 +11,13 @@ export default function MobileLayout() {
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950">
+        <FontSettingsDrawer />
         <LyricsScroll />
       </main>
 
-        {/* Now Playing Card fixed at bottom */}
+      {/* Now Playing Card fixed at bottom */}
       <div className="sticky bottom-0 w-full">
         <NowPlayingDrawer />
-        <FontSettingsDrawer />
       </div>
     </div>
   );
