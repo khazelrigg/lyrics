@@ -101,7 +101,7 @@ export default function LyricsLine({
 
   function handleDragEnd() {
     if (x.get() < -40) {
-      animate(x, -80, { duration: 0.2 });
+      animate(x, -92, { duration: 0.2 });
       setCurrentlyOpenId(id);
     } else {
       setCurrentlyOpenId(null);
@@ -109,13 +109,14 @@ export default function LyricsLine({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-md">
-      <div className="absolute right-2 top-1/2 -translate-y-1/2 z-0 flex gap-1">
+    <div className="relative overflow-hidden  bg-background rounded-md border-2">
+      <div className="absolute right-2 top-1/2 -translate-y-1/2 z-0 flex gap-2">
         <Button
           onClick={handleCopy}
           size="icon"
           variant="ghost"
-          className="bg-muted text-foreground p-1.5 rounded hover:text-gray-500 transition"
+          aria-label="Copy line to clipboard"
+          className="h-9 w-9 bg-yellow-200 text-foreground rounded-xl shadow-xs hover:bg-yellow-300 transition"
         >
           <Copy size={16} />
         </Button>
@@ -124,7 +125,8 @@ export default function LyricsLine({
           onClick={handleSeek}
           size="icon"
           variant="ghost"
-          className="bg-ui-accent text-white p-1.5 rounded hover:bg-blue-400 transition"
+          aria-label="Play song from here"
+          className="h-9 w-9 rounded-xl shadow-xs bg-blue-200 text-black hover:bg-ui-accent transition"
         >
           <Play size={16} />
         </Button>
@@ -133,13 +135,13 @@ export default function LyricsLine({
       <motion.div
         drag="x"
         dragDirectionLock
-        dragConstraints={{ left: -80, right: 0 }}
+        dragConstraints={{ left: -92, right: 0 }}
         style={{ x }}
         onDragEnd={handleDragEnd}
         className={cn(
           fontClass,
-          "px-4 py-2 relative z-10 bg-background transition-colors select-none touch-pan-x",
-          "flex items-center",
+          "px-4 py-3 relative z-5 bg-background transition-colors select-none touch-pan-x",
+          "flex items-center pr-[92px] min-h-[44px] border-2 rounded",
           isActive ? "text-ui-accent" : "text-muted-foreground"
         )}
       >
@@ -148,7 +150,7 @@ export default function LyricsLine({
           className={cn("w-full whitespace-nowrap overflow-hidden")}
           style={style}
         >
-          {text}
+          {text} 
         </div>
       </motion.div>
     </div>

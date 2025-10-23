@@ -12,7 +12,10 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [5173, 9000], 
+	"runArgs": [
+		"-p", "5173:5173",
+	],
+	"forwardPorts": [5173, 9000, 8000], 
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "cd lyrics-api && if [ ! -d .venv ]; then python3 -m venv .venv; fi && . .venv/bin/activate && pip install -r requirements.txt && cd ../lyrics-client && npm install",

@@ -15,7 +15,7 @@ export default function MobileLayout() {
       </main>
 
       {/* Now Playing Card fixed at bottom */}
-      <div className="sticky bottom-0 w-full bg-background">
+      <div className="sticky z-10 bottom-0 w-full bg-background">
         <NowPlayingDrawer />
         <FontSettingsDrawer />
       </div>

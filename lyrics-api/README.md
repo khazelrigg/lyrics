@@ -6,7 +6,6 @@ A simple fast api to scrape lyrics from multiple sources
 * Add [lrcLib](https://lrclib.net/) as a new service
 * For spotify, need to fetch the track info using the song_id
 
-
 ## Setup
 
  Start the local search API with python
@@ -27,6 +26,12 @@ Create/Modify the `lyrics-api/.env` file to include
 * SPOTIFY_CLIENT_ID=asdfasdfasf
 * SPOTIFY_CLIENT_SECRET=asdfasdf
 * SPOTIFY_DC=lkjasflkj
+
+
+## The Code 
+`/app/api/routes.py` is where to define endpoints like `/search` `/lyrics` etc.
+
+`/app/services` is where to create new lyrics scraping functions
 
 
 ## Example Queries
