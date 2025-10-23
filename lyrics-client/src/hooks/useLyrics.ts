@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useSpotifyStore } from "@/stores/spotifyStore";
 import { useLyricsStore } from "@/stores/lyricsStore";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+//const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const BASE_URL = "/api";
 
 export function useLyrics(source = "SpotifyLyricsSource") {
   const trackId = useSpotifyStore((s) => s.track?.trackId);
