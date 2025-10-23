@@ -2,12 +2,14 @@ import Header from "@/components/ui/header";
 import LyricsScroll from "@/components/lyrics/LyricsScroll";
 import NowPlayingDrawer from "@/components/now-playing/Drawer";
 import { FontSettingsDrawer } from "@/components/modals/FontSettings";
+import { LoopbackPicker } from "@/components/modals/LoopbackPicker";
 
 export default function MobileLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Header */}
       <Header />
+      <LoopbackPicker />
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto">
