@@ -1,25 +1,41 @@
 import { useEffect, useState } from "react";
-import { extractTokenFromUrl } from "@/services/spotify/auth";
 import { useNavigate } from "react-router-dom";
+import { handleSpotifyCallback } from "@/services/spotify/auth";
 
 export default function CallbackPage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const token = extractTokenFromUrl();
-      
-      if (token) {
-        // ✅ Redirect after token is saved
-        console.log("Got token:", token);
-        navigate("/");
-      } else {
-        setError("No access token found in URL.");
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const token = await handleSpotifyCallback();
+
+        if (cancelled) return;
+
+        if (token) {
+          // ✅ Tokens are saved inside handleSpotifyCallback()
+          navigate("/");
+        } else {
+          // user denied OR callback URL didn't include code
+          setError("Spotify authorization was cancelled or no code was returned.");
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            `Spotify authorization failed: ${
+              err instanceof Error ? err.message : String(err)
+            }`
+          );
+        }
       }
-    } catch (err) {
-      setError(`Failed to extract token: ${err}`);
-    }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [navigate]);
 
   return (
