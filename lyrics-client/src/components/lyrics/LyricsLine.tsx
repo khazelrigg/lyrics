@@ -185,9 +185,9 @@ export default function LyricsLine({
           aria-label="Record this line and save the audio"
           disabled={recorder.busy}
           className={cn(
-            "mr-2 h-9 w-9 rounded-xl shadow-xs bg-red-200 text-black hover:bg-red-400 transition flex-shrink-0",
+            "hidden mr-2 h-9 w-9 rounded-xl shadow-xs bg-red-200 text-black hover:bg-red-400 transition flex-shrink-0",
             reveal
-              ? "opacity-100 pointer-events-auto"
+              ? "sm:inline-flex opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           )}
         >

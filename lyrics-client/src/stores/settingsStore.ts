@@ -21,7 +21,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   fontSettings: {
     fontSize: 18,
     fontFamily: "sans",
-    textAlignment: "center",
+    textAlignment: "left",
   },
   increaseFontSize: () =>
     set((state) => ({
