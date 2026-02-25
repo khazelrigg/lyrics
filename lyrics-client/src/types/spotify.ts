@@ -66,3 +66,18 @@ export interface SpotifyTrackInfo {
   url: string;
   duration_ms: number;
 }
+
+export type SpotifyDevice = {
+  id: string | null;
+  is_active: boolean;
+  is_private_session: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: string; // "Computer" | "Smartphone" | "Speaker" | etc.
+  volume_percent?: number | null;
+  supports_volume: boolean;
+};
+
+export type SpotifyDevicesResponse = {
+  devices: SpotifyDevice[];
+};

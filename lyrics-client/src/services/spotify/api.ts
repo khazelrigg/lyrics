@@ -1,4 +1,4 @@
-import { SpotifyUserProfile, SpotifyPlaybackStatus, SpotifyRecentlyPlayedResponse, SpotifyQueueResponse } from "@/types/spotify";
+import { SpotifyUserProfile, SpotifyPlaybackStatus, SpotifyRecentlyPlayedResponse, SpotifyDevicesResponse, SpotifyQueueResponse } from "@/types/spotify";
 import { spotifyFetch } from "./fetch";
 
 export async function getUserProfile(): Promise<SpotifyUserProfile | null> {
@@ -11,6 +11,10 @@ export async function getPlaybackStatus(): Promise<SpotifyPlaybackStatus | null>
 
 export async function recentlyPlayed(limit: number): Promise<SpotifyRecentlyPlayedResponse> {
   return spotifyFetch(`/me/player/recently-played?limit=${limit}`);
+}
+
+export async function getDevices(): Promise<SpotifyDevicesResponse>{
+  return spotifyFetch("/me/player/devices")
 }
 
 export async function getQueue(): Promise<SpotifyQueueResponse> {
@@ -43,4 +47,22 @@ export async function repeat(state: "track" | "context" | "off") {
 
 export async function shuffle(state: boolean) {
   return spotifyFetch(`/me/player/shuffle?state=${state}`, { method: "PUT" });
+}
+
+
+/**
+ * Transfer playback to a specific device (e.g. your browser device from Web Playback SDK)
+ * `deviceIds` is usually a single device id.
+ */
+export async function transferPlayback(
+  deviceIds: string[],
+  options?: { play?: boolean }
+): Promise<null> {
+  return spotifyFetch("/me/player", {
+    method: "PUT",
+    body: JSON.stringify({
+      device_ids: deviceIds,
+      ...(options?.play !== undefined ? { play: options.play } : {}),
+    }),
+  });
 }

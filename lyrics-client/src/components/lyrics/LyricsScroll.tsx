@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLyricsStore } from "@/stores/lyricsStore";
-import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
 import LyricsLine from "./LyricsLine";
 import { Button } from "@/components/ui/button";
 import { play, seek } from "@/services/spotify/api";
@@ -10,40 +8,29 @@ import { ScrollTextIcon } from "lucide-react";
 import { useFontSettings } from "@/hooks/useFontSettings";
 import { cn } from "@/lib/utils";
 
+import { useActiveLyricLine } from "@/hooks/useActiveLyricLine";
+import { ActiveLyricProvider } from "@/components/lyrics/ActiveLyricContext";
+
 export default function LyricsScroll() {
-  const { lyrics } = useLyricsStore();
-  const estimatedProgress = useEstimatedProgress();
+  const { validLines, activeIndex } = useActiveLyricLine();
   const containerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const { className, style, fontSettings } = useFontSettings();
 
-  // Filter only lines with startTimeMs
-  const validLines = (lyrics?.lines || []).filter(
-    (line) => typeof line.start_time === "number"
-  );
-
   const [currentlyOpenId, setCurrentlyOpenId] = useState<number | null>(null);
 
-  // Find current active line
-  const activeIndex = validLines.findIndex(
-    (line, i, arr) =>
-      estimatedProgress >= line.start_time! &&
-      (i === arr.length - 1 || estimatedProgress < arr[i + 1].start_time!)
-  );
+  const activeStartTimeMs =
+    activeIndex >= 0 ? (validLines[activeIndex]?.start_time ?? null) : null;
 
   // Auto-scroll to center current line
   useEffect(() => {
     if (!autoScroll || activeIndex === -1 || !containerRef.current) return;
 
-    const activeEl = containerRef.current.children[
-      activeIndex
-    ] as HTMLDivElement;
-    if (activeEl) {
-      activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    const activeEl = containerRef.current.children[activeIndex] as HTMLDivElement;
+    activeEl?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [activeIndex, autoScroll]);
 
-  if (!lyrics || validLines.length === 0) {
+  if (!validLines || validLines.length === 0) {
     return (
       <div
         className={cn(
@@ -60,12 +47,12 @@ export default function LyricsScroll() {
   return (
     <div className="relative h-full">
       {/* Auto-scroll toggle */}
-      <div className="absolute top-2 right-4 z-20 \">
+      <div className="absolute top-2 right-4 z-20">
         <Button
           variant={autoScroll ? "default" : "outline"}
           size="sm"
           onClick={() => setAutoScroll((prev) => !prev)}
-          className={`gap-1 ${autoScroll ? 'bg-ui-accent text-white' : ''} `}
+          className={cn("gap-1", autoScroll && "bg-ui-accent text-white")}
         >
           <ScrollTextIcon className="w-4 h-4" />
           <span className="hidden sm:inline">
@@ -83,27 +70,27 @@ export default function LyricsScroll() {
         )}
         style={{
           ...style,
-          //fontSize: "20px", // Larger base font size
-          textAlign: fontSettings.textAlignment, // Apply text alignment
+          textAlign: fontSettings.textAlignment,
           lineHeight: `${Math.max(1.5, fontSettings.fontSize / 10)}`,
         }}
       >
-        {validLines.map((line, index) => (
-          <LyricsLine
-            id={index}
-            key={index}
-            text={line.text}
-            startTimeMs={line.start_time!}
-            nextStartTimeMs={validLines[index + 1]?.start_time ?? undefined}
-            isActive={index === activeIndex}
-            onClick={() => {
-              seek(line.start_time!);
-              play();
-            }}
-            currentlyOpenId={currentlyOpenId}
-            setCurrentlyOpenId={setCurrentlyOpenId}
-          />
-        ))}
+        <ActiveLyricProvider value={{ activeIndex, activeStartTimeMs }}>
+          {validLines.map((line, index) => (
+            <LyricsLine
+              id={index}
+              key={index}
+              text={line.text}
+              startTimeMs={line.start_time!}
+              nextStartTimeMs={validLines[index + 1]?.start_time ?? undefined}
+              onClick={() => {
+                seek(line.start_time!);
+                play();
+              }}
+              currentlyOpenId={currentlyOpenId}
+              setCurrentlyOpenId={setCurrentlyOpenId}
+            />
+          ))}
+        </ActiveLyricProvider>
       </div>
     </div>
   );

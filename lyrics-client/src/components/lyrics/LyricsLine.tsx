@@ -7,8 +7,8 @@ import { useFontSettings } from "@/hooks/useFontSettings";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-
 import { useLineRecorder } from "@/hooks/useLineRecorder";
+import { useActiveLyricContext } from "@/components/lyrics/ActiveLyricContext";
 
 interface LyricsLineProps {
   id: number;
@@ -16,7 +16,6 @@ interface LyricsLineProps {
   startTimeMs: number;
   nextStartTimeMs?: number;
 
-  isActive: boolean;
   onClick?: () => void;
   onLoop?: (start: number, end: number) => void;
 
@@ -29,25 +28,31 @@ export default function LyricsLine({
   text,
   startTimeMs,
   nextStartTimeMs,
-
-  isActive,
   onClick,
   currentlyOpenId,
   setCurrentlyOpenId,
 }: LyricsLineProps) {
   const { className: fontClass, style } = useFontSettings();
+  const { activeIndex, activeStartTimeMs } = useActiveLyricContext();
+
+  // Decide active locally (choose ONE of these approaches)
+  // A) by index (matches your map indices)
+  const isActive = id === activeIndex;
+
+  // B) by start time (more robust if list changes / filtering differs)
+  // const isActive = activeStartTimeMs != null && startTimeMs === activeStartTimeMs;
+
   const x = useMotionValue(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolling, setScrolling] = useState(false);
   const isOpen = currentlyOpenId === id;
 
-  // hover/touch reveal
   const [hovered, setHovered] = useState(false);
   const touchHideRef = useRef<number | null>(null);
   const reveal = isActive || isOpen || hovered;
 
-  const recorder = useLineRecorder(); // NEW
+  const recorder = useLineRecorder();
 
   useEffect(() => {
     if (!isOpen) {
@@ -83,7 +88,7 @@ export default function LyricsLine({
     let scrollLeft = 0;
     const scroll = () => {
       if (canceled) return;
-      scrollLeft += 0.5; // slow and smooth
+      scrollLeft += 0.5;
       if (scrollLeft >= el.scrollWidth / 2) {
         scrollLeft = 0;
       }
@@ -129,7 +134,6 @@ export default function LyricsLine({
     });
   }
 
-  // touch: reveal controls briefly
   function handleTouchStart() {
     setHovered(true);
     if (touchHideRef.current) window.clearTimeout(touchHideRef.current);
@@ -137,7 +141,7 @@ export default function LyricsLine({
   }
 
   return (
-    <div className="relative overflow-hidden  bg-background rounded-md border-2">
+    <div className="relative overflow-hidden bg-background rounded-md border-2">
       <div className="absolute right-2 top-1/2 -translate-y-1/2 z-0 flex gap-2">
         <Button
           onClick={handleCopy}
@@ -176,7 +180,6 @@ export default function LyricsLine({
           isActive ? "text-ui-accent" : "text-muted-foreground"
         )}
       >
-        {/* Record button shows only when active/open/hovered; use opacity so layout doesn't jump */}
         <Button
           onClick={handleRecordLine}
           size="icon"
@@ -191,7 +194,7 @@ export default function LyricsLine({
               : "opacity-0 pointer-events-none"
           )}
         >
-          <span /* Pulsing 'ring' effect to fill background button */
+          <span
             className={cn(
               "absolute inline-flex h-5 w-5 rounded-full bg-red-300 opacity-60",
               recorder.busy ? "animate-ping" : "hidden"
@@ -201,11 +204,7 @@ export default function LyricsLine({
             <motion.div
               initial={{ scale: 1, opacity: 1 }}
               animate={{ scale: [1, 1.15, 1], opacity: [1, 0.65, 1] }}
-              transition={{
-                duration: 0.9,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
               className="grid place-items-center"
             >
               <Mic size={16} />
