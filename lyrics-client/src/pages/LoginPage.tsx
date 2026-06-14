@@ -16,29 +16,26 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   return (
-    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#131313] px-5 py-10 text-white">
-      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] via-transparent to-black/30" />
-      <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-green-500/10 blur-[120px]" />
-      <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-green-500/10 blur-[120px]" />
-
+    <main className="relative flex items-center justify-center overflow-hidden px-5 py-10">
+     
       <section className="relative z-10 flex w-full max-w-md flex-col items-center text-center">
         <div className="mb-8 animate-float">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl border backdrop-blur-2xl">
             <Music2 className="h-11 w-11 text-green-400" />
           </div>
 
           <h1 className="mb-2 text-3xl font-bold tracking-tight">Lyrical</h1>
 
-          <p className="mx-auto max-w-[280px] text-base leading-relaxed text-white/65">
+          <p className="mx-auto max-w-[280px] text-base leading-relaxed">
             Learn languages through the music you love.
           </p>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-8 rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-10 shadow-2xl backdrop-blur-2xl">
+        <div className="flex w-full flex-col items-center gap-8 rounded-[2.5rem] border  p-10 shadow-2xl backdrop-blur-2xl">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold">Experience the full power</h2>
-            <p className="text-sm text-white/50">
-              Sync your library to start learning
+            <p className="text-sm text-primary/50">
+              Listen and view lyrics to your favorite songs in real time.
             </p>
           </div>
 
@@ -52,20 +49,20 @@ export default function LoginPage() {
             Connect with Spotify
           </Button>
 
-          <div className="text-xs font-semibold uppercase tracking-wider text-white/35">
-            Spotify is used to detect your playing track.
+          <div className="text-xs font-semibold uppercase tracking-wider">
+            Spotify is used to detect your playing song.
           </div>
         </div>
 
         <button
           type="button"
           onClick={() => navigate("/search")}
-          className="mt-8 border-b border-transparent pb-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/40 transition-colors hover:border-white/20 hover:text-white/70"
+          className="mt-8 border-b border-transparent pb-1 text-xs font-semibold uppercase tracking-[0.2em] text-black/40 transition-colors hover:border-black/20 hover:text-black/70"
         >
           Skip for now & explore search
         </button>
 
-        <div className="mt-8 flex items-center gap-6 text-white/35">
+        <div className="mt-8 flex items-center gap-6 text-primary/35">
           <div className="flex flex-col items-center gap-1">
             <Lock className="h-5 w-5" />
             <span className="text-[10px] font-semibold uppercase tracking-tight">
@@ -73,7 +70,7 @@ export default function LoginPage() {
             </span>
           </div>
 
-          <div className="h-6 w-px bg-white/10" />
+          <div className="h-6 w-px bg-black/35" />
 
           <div className="flex flex-col items-center gap-1">
             <ShieldCheck className="h-5 w-5" />

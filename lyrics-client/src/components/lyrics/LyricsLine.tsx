@@ -1,9 +1,9 @@
 // src/components/Lyrics/LyricsLine.tsx
-import { forwardRef, useState } from "react";
-import { LyricsLineData } from "../../types/lyrics";
-import { seek } from "../../services/spotifyApi";
+import { forwardRef } from "react";
+import { LyricsLineData } from "@/types/lyrics";
+import { seek } from "@/services/spotifyApi";
 
-import LyricsWord from "./LyricsWord";
+import LyricsWord from "@/components/lyrics/LyricsWord";
 
 interface LyricsLineProps extends LyricsLineData {
   isActive: boolean;
@@ -28,7 +28,7 @@ const LyricsLine = forwardRef<HTMLLIElement, LyricsLineProps>(
     },
     ref
   ) {
-    const [isHovered, setIsHovered] = useState(false);
+    //const [isHovered, setIsHovered] = useState(false);
 
     const handleSeek = async () => {
       if (typeof startTime === "number") {

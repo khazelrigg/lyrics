@@ -1,18 +1,16 @@
 // src/layout/Layout.tsx
-import { Link } from "react-router-dom"
-import { Home, Search, Settings, Music } from "lucide-react";
 
+import { AppHeader } from "@/components/layout/AppHeader"
 import { BottomNavBar } from "@/components/layout/BottomNavBar"
-import ConnectSpotify from "@/components/spotify/ConnectSpotify"
+import { Link } from "react-router-dom"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen max-h-screen bg-neutral-950 h-full w-fulltext-white grid grid-rows-[auto_1fr_auto]">
+    <div className="grid h-dvh w-full overflow-hidden">
       {/* Header */}
 
-
       {/* Main content */}
-      <main className="overflow-auto px-4 py-4 h-full w-full bg-neutral-950">
+      <main className="overflow-hidden px-4 py-4 h-full w-full">
         {children}
       </main>
 

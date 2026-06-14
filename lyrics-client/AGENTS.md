@@ -133,12 +133,16 @@ Avoid putting one-off component state into Zustand.
 * Avoid `any` unless working around unknown third-party API responses.
 * If using `any`, keep it localized and do not spread it across app types.
 
-## Quality Checks
+## Quality Checks / Verification
 
 After changes, check:
 
 ```bash
+npm run lint
 npm run dev
 ```
+
+* Require zero errors or warnings from eslint
+* Require succesful TypeScript and Vite compilation
 
 Fix TypeScript, import, and lint errors before considering the task complete.

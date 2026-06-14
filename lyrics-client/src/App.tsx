@@ -4,11 +4,11 @@ import SearchPage from "@/pages/SearchPage"
 import SettingsPage from "@/pages/SettingsPage"
 import CallbackPage from "@/pages/CallbackPage"
 import LoginPage from "@/pages/LoginPage"
-import NowPlayingPage from "@/pages/NowPlayingPage"
 
 import Layout from "@/layout/Layout"
 
 import { useSpotifySession } from "./hooks/useSpotifySession"
+import LibraryPage from "./pages/LibraryPage"
 
 export default function App() {
   // Starts the Spotify session and initialize stores
@@ -21,7 +21,7 @@ export default function App() {
       <Route path="/callback" element={<CallbackPage />} />
       <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
       <Route path="/login" element={<Layout><LoginPage /></Layout>} />
-      <Route path="/now-playing" element={<Layout><NowPlayingPage /></Layout>} />
+      <Route path="/library" element={<Layout><LibraryPage /></Layout>} />
     </Routes>
   )
 }

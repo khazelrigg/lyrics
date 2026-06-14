@@ -30,7 +30,9 @@ export function useSpotifySession() {
           duration: data.item.duration_ms,
           track: {
             title: data.item.name,
-            artist: data.item.artists.map((a: any) => a.name).join(", "),
+            artist: data.item.artists
+              .map((a: { name: string }) => a.name)
+              .join(", "),
             album: data.item.album.name,
             albumArt: data.item.album.images?.[0]?.url || "",
             trackId: data.item.id,

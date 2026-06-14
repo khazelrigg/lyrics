@@ -1,11 +1,18 @@
 // src/pages/SearchPage.tsx
+import { AppHeader } from "@/components/layout/AppHeader";
 import { useState } from "react";
 //import LyricsViewer from "../components/Lyrics/LyricsViewer"
 
+type SearchResult = {
+  title: string;
+  artist: string;
+  [key: string]: unknown;
+};
+
 export default function SearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [selectedLyrics, setSelectedLyrics] = useState<any>(null);
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [selectedLyrics, setSelectedLyrics] = useState<SearchResult | null>(null);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -15,8 +22,8 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">🔍 Search Lyrics</h1>
+    <div className="flex h-full w-full flex-col min-h-0 overflow-hidden">
+      <AppHeader title="Search" showBack/>
 
       <div className="mb-4">
         <input

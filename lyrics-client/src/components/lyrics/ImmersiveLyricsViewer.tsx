@@ -1,11 +1,10 @@
 // src/components/lyrics/ImmersiveLyricsViewer.tsx
 
-import { useEffect, useRef, useState } from "react";
+import {  useRef } from "react";
 
 import type { LyricsData } from "@/types/lyrics";
 import { useEstimatedProgress } from "@/hooks/useEstimatedProgress";
 import { formatTimestamp } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   lyrics: LyricsData;
@@ -55,8 +54,8 @@ export function ImmersiveLyricsViewer({ lyrics }: Props) {
                       isActive
                         ? "text-green-400"
                         : isPast
-                          ? "text-white/20"
-                          : "text-white/30",
+                          ? "text-black/20"
+                          : "text-black/30",
                     ].join(" ")}
                   >
                     {formatTimestamp(line.start_time)}
@@ -64,7 +63,7 @@ export function ImmersiveLyricsViewer({ lyrics }: Props) {
                 )}
 
                 <div className="relative">
-                  {isActive && (
+                  { isActive && (
                     <div className="absolute -left-4 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.9)] animate-pulse-dot" />
                   )}
 
@@ -72,10 +71,10 @@ export function ImmersiveLyricsViewer({ lyrics }: Props) {
                     className={[
                       "text-3xl font-bold leading-tight tracking-tight transition-all duration-500",
                       isActive
-                        ? "origin-left scale-105 text-white active-lyric-glow"
+                        ? "origin-left scale-105"
                         : isPast
-                          ? "text-white/20"
-                          : "text-white/35",
+                          ? "text-black/50"
+                          : "text-black/95",
                     ].join(" ")}
                   >
                     {line.text}

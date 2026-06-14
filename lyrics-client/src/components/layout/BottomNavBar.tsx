@@ -19,16 +19,16 @@ const navItems: BottomNavItem[] = [
     icon: Search,
   },
   {
-    label: "Library",
-    to: "/library",
-    icon: SquareLibrary,
+    label: "Settings",
+    to: "/settings",
+    icon: Settings,
   },
 
 ];
 
 export function BottomNavBar() {
   return (
-    <nav className="fixed bottom-0 left-0 z-50 flex h-20 w-full items-center justify-around border-t border-white/15 bg-[#131313] px-4 pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 z-50 flex h-20 w-full items-center justify-around border-t px-4 pb-[env(safe-area-inset-bottom)] bg-background">
       {navItems.map((item) => {
         const Icon = item.icon;
 
@@ -41,7 +41,7 @@ export function BottomNavBar() {
                 "flex flex-col items-center justify-center gap-1 transition-all duration-200 active:scale-90",
                 isActive
                   ? "scale-105 font-bold text-green-400"
-                  : "text-white/35 hover:text-white",
+                  : "text-black/75 hover:text-black",
               ].join(" ")
             }
           >

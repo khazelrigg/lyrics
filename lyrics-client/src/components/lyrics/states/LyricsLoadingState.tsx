@@ -1,5 +1,5 @@
 // src/components/lyrics/LyricsLoading.tsx
-import SwirlingEffectSpinner from "@/components/customized/spinner/spinner-06";
+import SwirlingEffectSpinner from "@/components/ui/spinner";
 
 export function LyricsLoadingState() {
   return (
@@ -22,15 +22,15 @@ export function LyricsLoadingState() {
       </div>
       */}
 
-      <div className="mb-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-green-400">
+      <div className="mb-3 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-green-400">
         Loading Lyrics
       </div>
 
-      <h2 className="text-2xl font-bold tracking-tight text-white">
+      <h2 className="text-2xl font-bold tracking-tight text-primary">
         Searching for lyrics…
       </h2>
 
-      <p className="mt-3 max-w-xs text-sm leading-6 text-white/45">
+      <p className="mt-3 max-w-xs text-sm leading-6 text-primary/45">
         Checking lyric sources for the current track.
       </p>
     </div>

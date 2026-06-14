@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { LyricsData, LyricsLineData } from "../../types/lyrics";
+import type { LyricsData } from "../../types/lyrics";
 import { useEstimatedProgress } from "../../hooks/useEstimatedProgress";
 import LyricsLine from "./LyricsLine";
 

@@ -1,16 +1,18 @@
 // src/pages/SettingsPage.tsx
+import { Settings } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { OtherSettingsPanel } from "@/components/settings/SettingsPanel";
+import { AppHeader } from "@/components/layout/AppHeader";
 
 export default function SettingsPage() {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">⚙️ Settings</h1>
-      <p className="mb-4">
-        Here you can adjust font size, theme, or lyric preferences.
-      </p>
-      <Link to="/" className="text-blue-400 underline">
-        Back to Home
-      </Link>
+    <div className="flex h-full w-full flex-col min-h-0 overflow-hidden">
+      <AppHeader title="Settings" showBack />
+      
+      <div className="flex-1 overflow-y-auto">
+        <OtherSettingsPanel />
+      </div>
     </div>
   );
 }

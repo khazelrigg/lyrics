@@ -8,7 +8,6 @@ import {
   MoreVertical,
   Search,
   Settings,
-  Library,
   Music,
   LogOut,
 } from "lucide-react";
@@ -26,6 +25,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import NowPlayingStatus from "../NowPlaying/NowPlayingCard";
+import { SpotifyConnectionBadge } from "../spotify/spotifyConnectionBadge";
 
 type HeaderStatus = {
   label: string;
@@ -48,11 +49,11 @@ export function AppHeader({
   status,
 }: AppHeaderProps) {
   const navigate = useNavigate();
-    const connected = useSpotifyStore((s) => s.connected);
-    const username = useSpotifyStore((s) => s.username);
-    const disconnect = useSpotifyStore((s) => s.disconnect);
+  const connected = useSpotifyStore((s) => s.connected);
+  const username = useSpotifyStore((s) => s.username);
+  //const disconnect = useSpotifyStore((s) => s.disconnect);
 
-    console.log(connected, username);
+  console.log(connected, username);
   const handleSpotifyLogout = () => {
     logoutSpotify();
     //disconnect();
@@ -61,41 +62,41 @@ export function AppHeader({
   const StatusIcon = status?.variant === "error" ? CloudOff : undefined;
 
   return (
-    <header className="relative z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-[#131313]/70 px-5 backdrop-blur-xl">
-      <div className="flex min-w-0 items-center gap-2">
+    <header className="relative z-50 grid grid-cols-3 h-20 w-full items-center border-b text-primary">
+      <div className="flex min-w-0 items-center gap-2 justify-self-start"> 
         {showBack && (
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate(-1)}
-            className="rounded-full text-green-400 hover:bg-white/10 hover:text-green-300"
+            className="rounded-full hover:text-primary-400 hover:scale-120"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="size-5" />
           </Button>
         )}
 
         {showCollapse && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-white hover:bg-white/10"
-          >
-            <ChevronDown className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="rounded-full shrink-0">
+            <ChevronDown className="size-5" />
           </Button>
         )}
 
         <div className="min-w-0">
-          <h1 className="truncate text-lg font-semibold text-white">{title}</h1>
+          <h1 className="truncate text-lg font-semibold">{title}</h1>
 
           {subtitle && (
-            <p className="truncate text-[10px] font-bold uppercase tracking-widest text-white/45">
+            <p className="truncate text-[10px] font-bold uppercase tracking-widest ">
               {subtitle}
             </p>
           )}
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="justify-self-center w-full">
+        <NowPlayingStatus />
+      </div>
+
+      <div className="flex items-center gap-2 justify-end justify-self-end">
         {status && (
           <span
             className={[
@@ -104,7 +105,7 @@ export function AppHeader({
                 ? "bg-red-500/10 text-red-300"
                 : status.variant === "success"
                   ? "bg-green-500/10 text-green-400"
-                  : "bg-white/10 text-white/60",
+                  : "bg-white/10 text-primary/60",
             ].join(" ")}
           >
             {StatusIcon && <StatusIcon className="h-3.5 w-3.5" />}
@@ -112,27 +113,26 @@ export function AppHeader({
           </span>
         )}
 
+        <SpotifyConnectionBadge />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full text-white hover:bg-white/10"
+              className="rounded-full hover:bg-white/10"
             >
               <MoreVertical className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent
-            align="end"
-            className="w-48 border-white/10 bg-[#1c1c1c] text-white"
-          >
+          <DropdownMenuContent align="end" className="w-48 border-white/10">
             <DropdownMenuLabel>Navigation</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={() => navigate("/now-playing")}>
+            <DropdownMenuItem onClick={() => navigate("/")}>
               <Music className="mr-2 h-4 w-4" />
-              Now Playing
+              Listen
             </DropdownMenuItem>
 
             <DropdownMenuItem onClick={() => navigate("/search")}>
@@ -140,10 +140,6 @@ export function AppHeader({
               Search
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => navigate("/library")}>
-              <Library className="mr-2 h-4 w-4" />
-              Library
-            </DropdownMenuItem>
 
             <DropdownMenuItem onClick={() => navigate("/settings")}>
               <Settings className="mr-2 h-4 w-4" />
@@ -161,7 +157,7 @@ export function AppHeader({
 
                 <DropdownMenuItem
                   onClick={handleSpotifyLogout}
-                  className="text-red-400 focus:bg-red-500 focus:text-white"
+                  className="text-red-400 focus:bg-red-500 focus:text-primary"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out of Spotify
@@ -170,7 +166,7 @@ export function AppHeader({
             ) : (
               <DropdownMenuItem
                 onClick={loginWithSpotify}
-                className="text-green-400 focus:bg-green-500 focus:text-black"
+                className="text-green-400 focus:bg-green-500 focus:text-primary"
               >
                 <LogIn className="mr-2 h-4 w-4" />
                 Sign in with Spotify
