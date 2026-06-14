@@ -1,6 +1,6 @@
 // src/hooks/useEstimatedProgress.ts
 import { useEffect, useState } from "react";
-import { useSpotifyStore } from "../store/spotifyStore";
+import { useSpotifyStore } from "@/stores/spotifyStore";
 
 /**
  * Returns a smoothly updating estimated progress position based on

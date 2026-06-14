@@ -11,8 +11,15 @@ A simple fast api to scrape lyrics from multiple sources
 
  Start the local search API with python
 
+
+### Create Python Virtual Environment
     cd lyrics-api
-    source venv/bin/activate
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+
     uvicorn app.main:app --reload
 
 

@@ -216,6 +216,7 @@ class LyricsTranslateLyricsSource(LyricsSource):
                 title=song_title_text,
                 artist=artist_name,
                 album=album_name,
+                status="OK",
                 lines=lyrics_lines,
                 synced=False,
                 language="JP",

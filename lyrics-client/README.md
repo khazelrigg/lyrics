@@ -20,7 +20,11 @@ Connects to Spotify API for now playing track info and sends requests back to ou
 #### Other ideas
 - Favorites list? Save favorite lyrics into a local cache
 
+## Setup
 
+    cd lyrics-client/
+    npm install
+    
 
 ---
 

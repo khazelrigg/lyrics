@@ -1,92 +1,105 @@
-// src/components/Spotify/ConnectSpotify.tsx
+import { useEffect, useState } from "react";
 import {
-  initiateSpotifyAuth,
-  getAccessToken,
-  clearAccessToken,
-} from "../../services/spotifyAuth";
-import { useEffect, useRef, useState } from "react";
-import { getUserProfile } from "../../services/spotifyApi";
+  currentToken,
+  exchangeCodeForToken,
+  getValidAccessToken,
+  loginWithSpotify,
+  logoutSpotify,
+} from "@/services/spotifyAuth.ts";
 
-/**
- * A small header component that either shows the login button or the user avatar if logged in.
- */
-export default function ConnectSpotify() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [displayName, setDisplayName] = useState<string | null>(null);
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+type SpotifyUser = {
+  display_name: string | null;
+  email?: string;
+  images?: { url: string }[];
+};
+
+export default function SpotifyLogin() {
+  const [user, setUser] = useState<SpotifyUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchSpotifyUser() {
+    const accessToken = await getValidAccessToken();
+
+    if (!accessToken) {
+      setUser(null);
+      return;
+    }
+
+    const response = await fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const data = (await response.json()) as SpotifyUser;
+    setUser(data);
+  }
 
   useEffect(() => {
-    const token = getAccessToken();
-    if (!token) return;
+    async function initAuth() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
 
-    setIsLoggedIn(true);
+        if (code) {
+          await exchangeCodeForToken(code);
 
-    getUserProfile()
-      .then((data) => {
-        setProfileImg(data.images?.[0]?.url || null);
-        setDisplayName(data.display_name || null);
-      })
-      .catch(() => setIsLoggedIn(false));
-  }, []);
+          const url = new URL(window.location.href);
+          url.searchParams.delete("code");
+          window.history.replaceState({}, document.title, url.toString());
+        }
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        if (currentToken.accessToken) {
+          await fetchSpotifyUser();
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "Spotify login failed");
+      } finally {
+        setLoading(false);
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    initAuth();
   }, []);
 
-  const handleLogout = () => {
-    clearAccessToken();
-    window.location.reload();
-  };
+  if (loading) {
+    return <button disabled>Checking Spotify...</button>;
+  }
 
-  if (!isLoggedIn) {
+  if (error) {
     return (
-      <button
-        onClick={initiateSpotifyAuth}
-        className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 text-sm"
-      >
-        Connect Spotify
-      </button>
+      <div>
+        <p style={{ color: "red" }}>Spotify auth error</p>
+        <pre>{error}</pre>
+        <button onClick={logoutSpotify}>Reset Spotify login</button>
+      </div>
     );
   }
 
-  return (
-    <div className="relative" ref={menuRef}>
-      <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="flex items-center gap-2"
-      >
-        {profileImg ? (
-          <img
-            src={profileImg}
-            alt="Spotify profile"
-            className="w-8 h-8 rounded-full shadow"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center font-bold text-black">
-            {displayName?.charAt(0) || "S"}
-          </div>
-        )}
-      </button>
+  if (!user) {
+    return <button onClick={loginWithSpotify}>Connect Spotify</button>;
+  }
 
-      {showMenu && (
-        <div className="absolute right-0 mt-2 w-40 bg-neutral-800 border border-neutral-700 rounded shadow-lg p-2 z-50">
-          <p className="text-sm text-white px-2 pb-2 truncate">{displayName}</p>
-          <button
-            onClick={handleLogout}
-            className="w-full text-left px-2 py-1 text-sm text-red-400 hover:text-white hover:bg-red-500 rounded"
-          >
-            Log out
-          </button>
-        </div>
+  return (
+    <div>
+      {user.images?.[0]?.url && (
+        <img
+          src={user.images[0].url}
+          alt="Spotify profile"
+          width={40}
+          height={40}
+        />
       )}
+
+      <p>Signed in as {user.display_name ?? "Spotify user"}</p>
+
+      <button onClick={logoutSpotify}>Log out</button>
     </div>
   );
 }

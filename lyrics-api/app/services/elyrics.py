@@ -246,6 +246,7 @@ class eLyricsLyricsSource(LyricsSource):
                 title=song_title_text,
                 artist=artist_name,
                 album=album_name,
+                status="OK",
                 lines=lyrics_lines,
                 synced=False,
                 language="en",
@@ -264,7 +265,7 @@ class eLyricsLyricsSource(LyricsSource):
             return None
         except Exception as e: #pylint: disable=broad-except
             self.logger.error("Unexpected error while fetching lyrics: %s", str(e))
-
+            return None
 
     def decompress_content(self, content, encoding):
         """

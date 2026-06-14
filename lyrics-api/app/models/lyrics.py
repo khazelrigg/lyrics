@@ -10,6 +10,7 @@ class LyricsData(BaseModel):
     title: str
     artist: str
     album: Optional[str] = "Unknown"
+    status: str
     lines: List[LyricsLine]
     synced: Optional[bool] = False
     language: Optional[str] = None

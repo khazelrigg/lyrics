@@ -1,7 +1,7 @@
 // src/hooks/useLyrics.ts
 import { useEffect, useState } from "react";
-import { useSpotifyStore } from "../store/spotifyStore";
-import type { LyricsData } from "../types/lyrics";
+import { useSpotifyStore } from "@/stores/spotifyStore";
+import type { LyricsData } from "@/types/lyrics";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -27,7 +27,7 @@ export function useLyrics(source: string = "SpotifyLyricsSource") {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [trackId]);
+  }, [trackId, source]);
 
   return { lyrics, loading, error };
 }

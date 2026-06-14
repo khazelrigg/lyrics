@@ -196,6 +196,7 @@ class UtaNetLyricsSource(LyricsSource):
                 artist=artist_name,
                 album=album_name,
                 url=song_url,
+                status="OK",
                 lines=lyrics_lines,
                 synced=False,
                 language="JP",

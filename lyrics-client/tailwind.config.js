@@ -7,8 +7,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Poppins', 'Noto Sans JP', 'Arial', 'sans-serif'],
-        lyrics: ['Noto Sans JP', 'Arial', 'sans-serif']
+        sans: ['sans-serif'],
+        lyrics: ['sans-serif']
+        //sans: ['Poppins', 'Noto Sans JP', 'Arial', 'sans-serif'],
+        //lyrics: ['Noto Sans JP', 'Arial', 'sans-serif']
       }
     },
   },

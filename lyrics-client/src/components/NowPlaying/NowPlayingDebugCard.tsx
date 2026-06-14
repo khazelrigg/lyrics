@@ -1,5 +1,6 @@
 // src/components/Spotify/NowPlayingDebugCard.tsx
-import { useSpotifyStore } from "../../store/spotifyStore";
+import { formatTimestamp } from "@/lib/utils";
+import { useSpotifyStore } from "@/stores/spotifyStore";
 
 export default function NowPlayingDebugCard() {
   const { track, isPlaying, currentTime, duration } = useSpotifyStore();
@@ -27,7 +28,7 @@ export default function NowPlayingDebugCard() {
         </div>
         <div>▶ {isPlaying ? "Playing" : "Paused"}</div>
         <div>
-          ⏱ {Math.floor(currentTime / 1000)}s / {Math.floor(duration / 1000)}s
+          ⏱ {formatTimestamp(currentTime)} / {formatTimestamp(duration)}  
         </div>
       </div>
     </div>

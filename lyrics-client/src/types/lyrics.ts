@@ -12,13 +12,23 @@ export interface LyricsLineData {
   parsedWords?: LyricsWordData[];
 }
 
+export type LyricsStatus = 
+  | "OK"
+  | "INSTRUMENTAL"
+  | "NOT_FOUND"
+  | "ERROR";
+
 export interface LyricsData {
   track_id: string;
   title: string;
   artist: string;
   album?: string;
-  lines: LyricsLineData[];
+
+  status: LyricsStatus;
   synced: boolean;
+
+  lines: LyricsLineData[];
+
   language?: string;
   source?: string;
   url?: string;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadTokenizer } from "../utils/kuromojiLoader";
+import { loadTokenizer } from "@/utils/kuromojiLoader";
 //import type { Tokenizer } from "@patdx/kuromoji";
 
 export function useTokenizer() {

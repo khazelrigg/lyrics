@@ -148,6 +148,7 @@ class GeniusLyricsSource(LyricsSource):
                     artist=song_info["artist"],
                     album=song_info["album"],
                     url=lyrics_url,
+                    status="INSTRUMENTAL",
                     lines=[LyricsLine(text="This song is an instrumental.", start_time=0)],
                     synced=False,
                     language=song_info["language"],
@@ -169,6 +170,7 @@ class GeniusLyricsSource(LyricsSource):
                     artist=song_info["artist"],
                     album=song_info["album"],
                     url=lyrics_url,
+                    status="NOT_FOUND",
                     lines=[LyricsLine(text="Lyrics not found on Genius page.", start_time=0)],
                     synced=False,
                     language=song_info["language"],
@@ -217,6 +219,7 @@ class GeniusLyricsSource(LyricsSource):
                 synced=False,
                 language=song_info["language"],
                 source="Genius",
+                status="OK",
                 media={"thumbnail": song_info["thumbnail_url"]}
             )
 

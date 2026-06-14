@@ -1,35 +1,42 @@
+// src/pages/SpotifyCallback.tsx
 import { useEffect, useState } from "react";
-import { extractTokenFromUrl } from "../services/spotifyAuth";
-import { useNavigate } from "react-router-dom";
+import { exchangeCodeForToken } from "@/services/spotifyAuth";
 
-export default function CallbackPage() {
-  const navigate = useNavigate();
+export default function SpotifyCallback() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const token = extractTokenFromUrl();
-      if (token) {
-        // ✅ Redirect after token is saved
-        navigate("/");
-      } else {
-        setError("No access token found in URL.");
+    async function handleCallback() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
+
+        if (!code) {
+          throw new Error("Missing Spotify auth code");
+        }
+
+        await exchangeCodeForToken(code);
+
+        window.history.replaceState({}, document.title, "/");
+        window.location.href = "/";
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "Spotify login failed");
       }
-    } catch (err) {
-      setError("Failed to extract token.");
     }
+
+    handleCallback();
   }, []);
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-white">
-      {error ? (
-        <div className="text-red-400 text-lg">{error}</div>
-      ) : (
-        <>
-          <p className="text-lg mb-2">Authorizing with Spotify...</p>
-          <p className="text-sm text-gray-400">You’ll be redirected shortly.</p>
-        </>
-      )}
-    </div>
-  );
+  if (error) {
+    return (
+      <div>
+        <h1>Spotify login failed</h1>
+        <pre>{error}</pre>
+        <a href="/">Go home</a>
+      </div>
+    );
+  }
+
+  return <p>Connecting Spotify...</p>;
 }
