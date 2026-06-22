@@ -1,6 +1,4 @@
 // src/pages/SettingsPage.tsx
-import { Settings } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { OtherSettingsPanel } from "@/components/settings/SettingsPanel";
 import { AppHeader } from "@/components/layout/AppHeader";

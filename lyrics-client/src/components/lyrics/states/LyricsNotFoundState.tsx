@@ -23,7 +23,7 @@ export function LyricsNotFoundState({
           <Music className="h-12 w-12 text-muted-foreground/50" />
         </div>
 
-        <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-foreground">
           {title}
         </h2>
 

@@ -4,7 +4,11 @@
 import NowPlayingStatus from "@/components/NowPlaying/NowPlayingCard";
 
 import { AppHeader } from "@/components/layout/AppHeader";
-import { OtherSettingsPanel } from "@/components/settings/SettingsPanel";
+import {
+  OtherSettingsPanel,
+  type FontFamily,
+  type FontSize,
+} from "@/components/settings/SettingsPanel";
 import { useState } from "react";
 
 export default function LibraryPage() {

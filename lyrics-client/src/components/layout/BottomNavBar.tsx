@@ -1,4 +1,4 @@
-import { SquareLibrary, Music, Search, Settings } from "lucide-react";
+import { Music, Search, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 type BottomNavItem = {

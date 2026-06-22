@@ -1,8 +1,6 @@
 // src/layout/Layout.tsx
 
-import { AppHeader } from "@/components/layout/AppHeader"
 import { BottomNavBar } from "@/components/layout/BottomNavBar"
-import { Link } from "react-router-dom"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

@@ -1,40 +1,40 @@
-// src/pages/HomePage.tsx
-
+import { AppHeader } from "@/components/layout/AppHeader";
+import { ImmersiveLyricsViewer } from "@/components/lyrics/ImmersiveLyricsViewer";
+import { InstrumentalState } from "@/components/lyrics/states/InstrumentalState";
+import { LyricsLoadingState } from "@/components/lyrics/states/LyricsLoadingState";
+import { LyricsNotFoundState } from "@/components/lyrics/states/LyricsNotFoundState";
 import { useLyrics } from "@/hooks/useLyrics";
 import { useSpotifyStore } from "@/stores/spotifyStore";
-
-import { LyricsNotFoundState } from "@/components/lyrics/states/LyricsNotFoundState";
-import { LyricsLoadingState } from "@/components/lyrics/states/LyricsLoadingState";
-import { InstrumentalState } from "@/components/lyrics/states/InstrumentalState";
-
-import { ImmersiveLyricsViewer } from "@/components/lyrics/ImmersiveLyricsViewer";
-import LoginPage from "./LoginPage";
-import { AppHeader } from "@/components/layout/AppHeader";
+import LoginPage from "@/pages/LoginPage";
 
 export default function HomePage() {
   const { lyrics, loading } = useLyrics();
-  const spotify = useSpotifyStore();
+  const connected = useSpotifyStore((state) => state.connected);
+  const hasLyrics = connected && !loading && lyrics?.status === "OK";
 
   return (
-    <div className="flex h-full w-full flex-col min-h-0 overflow-hidden">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
       <header className="shrink-0">
         <AppHeader title="Listen" showBack />
       </header>
 
-      <main className="min-h-0 flex-1 px-4 overflow-y-auto">
-        {/* Set content based on lyrics state */}
-        {!spotify.connected ? (
+      <main
+        className={[
+          "min-h-0 flex-1 px-4",
+          hasLyrics ? "flex overflow-hidden" : "overflow-y-auto",
+        ].join(" ")}
+      >
+        {!connected ? (
           <LoginPage />
         ) : loading ? (
           <LyricsLoadingState />
-        ) : lyrics && lyrics.status === "INSTRUMENTAL" ? (
+        ) : lyrics?.status === "INSTRUMENTAL" ? (
           <InstrumentalState />
-        ) : lyrics && lyrics.status === "OK" ? (
+        ) : lyrics?.status === "OK" ? (
           <ImmersiveLyricsViewer lyrics={lyrics} />
         ) : (
           <LyricsNotFoundState />
         )}
-        {/*<LyricsViewer lyrics={lyrics ?? dummyLyrics} />*/}
       </main>
     </div>
   );

@@ -31,8 +31,8 @@ import {
 } from "@/components/settings/SegmentedControl";
 import { SettingToggleRow } from "@/components/settings/SettingsToggleRow";
 
-type FontFamily = "sora" | "inter" | "roboto";
-type FontSize = "small" | "medium" | "large";
+export type FontFamily = "sora" | "inter" | "roboto";
+export type FontSize = "small" | "medium" | "large";
 
 type OtherSettingsPanelProps = {
   lightMode?: boolean;
